@@ -29,16 +29,13 @@ struct topup{
 
 #define MAX 100
 Buah daftarBuah[MAX];
-string username, password;
+string username, password, namabuah;
 int pilihan, totalbuah = 0, percobaan = 0, jumlahpengguna = 1;
 int jumlahTopUp = 0; topup daftarTopUp[MAX];
 
 nama_pengguna pengguna[MAX] = {
     {"kicaw", "123", 100000}
 };
-
-string username, password, namabuah;
-int pilihan, totalbuah = 0, percobaan = 0, jumlahpengguna = 1;
 
 void takvalid(){
     cout << "!!! pilihan tidak valid !!!" << endl;
