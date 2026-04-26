@@ -1,6 +1,8 @@
 #include <iostream>
 #include <iomanip>
 #include <cmath>
+#include <stdexcept>
+#include <limits>
 using namespace std;
 
 bool login_admin = false;
@@ -27,11 +29,13 @@ struct topup{
 
 #define MAX 100
 Buah daftarBuah[MAX];
+string username, password;
+int pilihan, totalbuah = 0, percobaan = 0, jumlahpengguna = 1;
+int jumlahTopUp = 0; topup daftarTopUp[MAX];
+
 nama_pengguna pengguna[MAX] = {
     {"kicaw", "123", 100000}
 };
-string username, password;
-int pilihan, totalbuah = 0, percobaan = 0, jumlahpengguna = 1;
 
 void takvalid(){
     cout << "!!! pilihan tidak valid !!!" << endl;
@@ -127,7 +131,55 @@ void laporanPenjualan(){
 }
 
 void konfirmasiTopUp(){
-    judulpnjng("KONFIRMASI TOP-UP");
+    try {
+        judulpnjng("KONFIRMASI TOP-UP");
+        bool adaPermintaan = false;
+
+        cout << "+" << setfill('-') << setw(5) << "+" << setw(20) << "+" << setw(15) << "+" << setw(15) << "+" << endl;
+        cout << setfill(' ') << "| " << left << setw(3) << "no" << " | " << setw(18) << "username" << "| " << setw(13) << "jumlah" << "| " << setw(12) << "status" << "|" << endl;
+        cout << "+" << setfill('-') << setw(5) << "+" << setw(20) << "+" << setw(15) << "+" << setw(15) << "+" << setfill(' ') << endl;
+
+        for (int i = 0; i < jumlahTopUp; i++) {
+            if (daftarTopUp[i].status == "dalam proses") {
+                adaPermintaan = true;
+                cout << "| " << left << setw(3) << i + 1 << " | " << setw(18) << daftarTopUp[i].username << "| Rp" << setw(10) << daftarTopUp[i].jumlah << " | " << setw(12) << daftarTopUp[i].status << "|" << endl;
+            }
+        }
+
+        if (!adaPermintaan) {
+            cout << "| " << setw(52) << left << "tidak ada antrean top-up saat ini." << " |" << endl;
+        }
+        cout << "+" << setfill('-') << setw(5) << "+" << setw(20) << "+" << setw(15) << "+" << setw(15) << "+" << setfill(' ') << endl << endl;
+
+        if (adaPermintaan) {
+            cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Bersihkan sisa Enter dari menu sebelumnya
+            for (int i = 0; i < jumlahTopUp; i++) {
+                if (daftarTopUp[i].status == "dalam proses") {
+                    cout << "> konfirmasi top-up [" << daftarTopUp[i].username << "] sebesar Rp" << daftarTopUp[i].jumlah << " (y/n): ";
+                    string konfirmasi; getline(cin, konfirmasi);
+                    
+                    if (konfirmasi == "y" || konfirmasi == "Y") {
+                        for (int j = 0; j < jumlahpengguna; j++) {
+                            if (pengguna[j].username == daftarTopUp[i].username) {
+                                pengguna[j].saldo += daftarTopUp[i].jumlah;
+                                daftarTopUp[i].status = "selesai";
+                                cout << ">>> berhasil dikonfirmasi!\n" << endl;
+                                break;
+                            }
+                        }
+                    } else if (konfirmasi.empty()) {
+                        throw invalid_argument("!!! input tidak boleh kosong !!!");
+                    } else if (konfirmasi == "n" || konfirmasi == "N") {
+                        cout << ">>> dilewati.\n" << endl;
+                    } else {
+                        throw invalid_argument("!!! input tidak valid, harap masukkan 'y' atau 'n' !!!");
+                    }
+                }
+            }
+        }
+    } catch (const exception& e) {
+        cout << "\n[ERROR] Terjadi Kesalahan: " << e.what() << endl;
+    }
 }
 
 void hapusUser(){
@@ -142,15 +194,63 @@ void lihatriwayat(){
     judulpnjng("RIWAYAT PEMBELIAN");
 }
 
-void topup(){
+void prosesTopUp(){
     judulpnjng("TOP-UP SALDO");
+    try {
+        if (jumlahTopUp >= MAX) {
+            cout << "!!! antrean top-up penuh, silakan hubungi admin !!!" << endl;
+            return;
+        }
+
+        cout << "masukkan jumlah top-up: Rp"; string input;
+        cin.ignore(numeric_limits<streamsize>::max(), '\n'); getline(cin, input);
+
+        if (input.empty()) {
+            throw invalid_argument("!!! input tidak boleh kosong !!!");
+        }
+
+        for (char c : input) {
+            if (c < '0' || c > '9') {
+                throw invalid_argument("!!! input tidak valid !!!");
+            }
+        }
+
+        int jumlah = stoi(input);
+        if (jumlah < 10000) throw invalid_argument("!!! jumlah top-up tidak boleh kurang dari Rp10000 !!!");
+
+        for (int i = 0; i < jumlahpengguna; i++) {
+            if (pengguna[i].username == username) {
+                if (jumlah > 1000000) {
+                    throw invalid_argument("!!! jumlah top-up tidak boleh lebih dari Rp1.000.000 !!!");
+                }
+                break;
+            }
+        }
+
+        daftarTopUp[jumlahTopUp].username = username;
+        daftarTopUp[jumlahTopUp].jumlah = jumlah;
+        daftarTopUp[jumlahTopUp].status = "dalam proses";
+
+        cout << "\n+" << setfill('-') << setw(46) << "+" << endl;
+        cout << setfill(' ') << "|" << setw(36) << right << "RINGKASAN PERMINTAAN TOP-UP" << setw(10) << "|" << endl;
+        cout << "+" << setfill('-') << setw(46) << "+" << endl;
+        cout << setfill(' ') << "| " << left << setw(13) << "username" << " : " << setw(26) << daftarTopUp[jumlahTopUp].username << "  |" << endl;
+        cout << "| " << left << setw(13) << "jumlah"   << " : Rp" << setw(23) << daftarTopUp[jumlahTopUp].jumlah << "   |" << endl;
+        cout << "| " << left << setw(13) << "status"   << " : " << setw(26) << daftarTopUp[jumlahTopUp].status << "  |" << endl;
+        cout << "+" << setfill('-') << setw(46) << "+" << setfill(' ') << endl;
+
+        jumlahTopUp++;
+        cout << "\npermintaan telah dikirim! menunggu konfirmasi admin.\n" << endl;
+    } catch (const exception& e) {
+        cout << "\n[ERROR] terjadi kesalahan: " << e.what() << endl;
+    }
 }
 
 void lihatsaldo(){
     judulpnjng("LIHAT SALDO");
     for (int i = 0; i < jumlahpengguna; i++) {
         if (pengguna[i].username == username) {
-            cout << "Saldo Anda saat ini: Rp" << pengguna[i].saldo << ".\n" << endl;
+            cout << "saldo anda saat ini: Rp" << pengguna[i].saldo << "\n" << endl;
             return;
         }
     }
@@ -242,7 +342,7 @@ void menuuser(){
                 system("pause");
                 continue;
             case 4:
-                topup();
+                prosesTopUp();
                 system("pause");
                 continue;
             case 5:
