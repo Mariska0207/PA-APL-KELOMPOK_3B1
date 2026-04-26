@@ -9,6 +9,7 @@ bool login_user = false;
 struct nama_pengguna{
     string username;
     string password;
+    int saldo;
 };
 
 struct Buah {
@@ -18,11 +19,19 @@ struct Buah {
     string status;
 };
 
+struct topup{
+    string username;
+    int jumlah;
+    string status;
+};
+
 #define MAX 100
 Buah daftarBuah[MAX];
-nama_pengguna pengguna[MAX];
+nama_pengguna pengguna[MAX] = {
+    {"kicaw", "123", 100000}
+};
 string username, password;
-int pilihan, totalbuah = 0, percobaan = 0, jumlahpengguna = 0;
+int pilihan, totalbuah = 0, percobaan = 0, jumlahpengguna = 1;
 
 void takvalid(){
     cout << "!!! pilihan tidak valid !!!" << endl;
@@ -44,6 +53,7 @@ bool cek_username(string username, int index){
     }
     return cek_username(username, index + 1);
 }
+
 void registrasi(){
     cout << "=============================" << endl;
     cout << "           REGISTER" << endl;
@@ -91,7 +101,7 @@ bool login_pengguna(string &username, string &password){
     cout << "MASUKKAN USERNAME : ";
     cin >> username;
     cout << "MASUKKAN PASSWORD : ";
-    cin >> password;    
+    cin >> password;
     for(int i = 0; i < jumlahpengguna; i++){
         if(username == pengguna[i].username && password == pengguna[i].password){
             return true;
@@ -138,6 +148,12 @@ void topup(){
 
 void lihatsaldo(){
     judulpnjng("LIHAT SALDO");
+    for (int i = 0; i < jumlahpengguna; i++) {
+        if (pengguna[i].username == username) {
+            cout << "Saldo Anda saat ini: Rp" << pengguna[i].saldo << ".\n" << endl;
+            return;
+        }
+    }
 }
 
 void menulihat(){
