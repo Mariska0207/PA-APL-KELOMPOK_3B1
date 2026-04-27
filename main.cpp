@@ -114,9 +114,9 @@ bool login_pengguna(string &username, string &password){
     return false;
 }
 
-void lihat_barang(){
+void lihat_buah(){
     cout << left << setw(5) << "No"
-    << setw(20) << "Nama Barang"
+    << setw(20) << "Nama Buah"
     << setw(10) << "Harga"
     << setw(10) << "Stok"
     << setw(10) << "Status" << endl;
@@ -129,6 +129,19 @@ void lihat_barang(){
         << setw(10) << daftarBuah[i].stok
         << setw(10) << daftarBuah[i].status << endl;
     }
+    cout << "=========================================================\n";
+}
+void lihatbuah(int index){
+    cout << left << setw(5) << "No"
+        << setw(20) << "nama buah"
+        << setw(10) << "harga"
+        << setw(10) << "stok"
+        << setw(10) << "status" << endl;
+    cout << left << setw(5) << index+1
+        << setw(20) << daftarBuah[index].nama
+        << setw(10) << daftarBuah[index].harga
+        << setw(10) << daftarBuah[index].stok
+        << setw(10) << daftarBuah[index].status << endl;
     cout << "=========================================================\n";
 }
 
@@ -167,7 +180,7 @@ void updateBuah(){
     if(totalbuah == 0){
         cout << "!!! daftar buah kosong !!!" << endl;
     }else{
-        lihat_barang();
+        lihat_buah();
         int no_update;
         cout << "masukkan NOMOR buah yang ingin di update (1-" << totalbuah << "): ";
         cin >> no_update;
@@ -191,7 +204,7 @@ void hapusBuah(){
     if(totalbuah == 0){
         cout << "!!! daftar buah kosong !!!" << endl;
     }else{
-        lihat_barang();
+        lihat_buah();
         int no_hapus;
         cout << "masukkan NOMOR buah yang ingin di hapus (1-" << totalbuah << "): ";
         cin >> no_hapus;
@@ -456,7 +469,7 @@ void menulihat(){
                     continue;
                 }else{
                     urutharga(daftarBuah, totalbuah);
-                    lihat_barang();
+                    lihat_buah();
                     system("pause");
                     continue;
                 }
@@ -468,7 +481,7 @@ void menulihat(){
                     continue;
                 }else{
                     urutnama(daftarBuah, 0, totalbuah-1);
-                    lihat_barang();
+                    lihat_buah();
                     system("pause");
                     continue;
                 }
@@ -480,7 +493,7 @@ void menulihat(){
                     continue;
                 }else{
                     urutstok(daftarBuah, totalbuah);
-                    lihat_barang();
+                    lihat_buah();
                     system("pause");
                     continue;
                 }
@@ -499,7 +512,7 @@ void menulihat(){
                         cout << "!!! buah tidak ditemukan !!!" << endl;
                     }else{
                         cout << "buah ditemukan pada index ke-" << index << endl;
-                        lihat_barang();
+                        lihatbuah(index);
                     }
                     system("pause");
                     break;
@@ -520,7 +533,7 @@ void menulihat(){
                         cout << "!!! buah tidak ditemukan !!!" << endl;
                     }else{
                         cout << "buah ditemukan pada index ke-" << index << endl;
-                        lihat_barang();
+                        lihatbuah(index);
                     }
                     system("pause");
                     break;
