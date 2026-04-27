@@ -296,7 +296,7 @@ void belibuah(){
         if(cin.fail()){
             cin.clear();
             cin.ignore(numeric_limits<streamsize>::max(), '\n');
-            throw invalid_argument("input harus berupa angka");
+            throw invalid_argument("input harus berupa angka.");
         }
 
         if(pilihBuah < 1 || pilihBuah > totalbuah){
