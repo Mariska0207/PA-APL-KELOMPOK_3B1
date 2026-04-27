@@ -149,6 +149,17 @@ void lihatbuah(int index){
         << setw(10) << daftarBuah[index].status << endl;
 }
 
+void lihat_user(){
+    cout << left << setw(5) << "No"
+    << setw(20) << "Username"
+    << setw(10) << "Password" << endl;
+    for(int i = 0; i < jumlahpengguna; i++){
+        cout << left << setw(5) << i+1
+        << setw(20) << pengguna[i].username
+        << setw(10) << pengguna[i].password << endl;
+    }
+}
+
 void tambahBuah(){
     judulpnjng("TAMBAH DAFTAR BUAH");
     if(totalbuah >= MAX){
@@ -283,6 +294,24 @@ void konfirmasiTopUp(){
 
 void hapusUser(){
     judulpnjng("HAPUS USER");
+    if(jumlahpengguna == 0){
+        cout << "!!! daftar pengguna kosong !!!" << endl;
+    }else{
+        lihat_user();
+        int no_hapus;
+        cout << "masukkan NOMOR pengguna yang ingin di hapus (1-" << jumlahpengguna << "): ";
+        cin >> no_hapus;
+        cin.ignore();
+        if(no_hapus >= 1 && no_hapus <= jumlahpengguna){
+            for(int j = no_hapus - 1; j < jumlahpengguna - 1; j++){
+                pengguna[j] = pengguna[j + 1];
+            }
+            jumlahpengguna--;
+            judulpnjng("USER BERHASIL DIHAPUS");
+        }else{
+            judulpnjng("!!! USER TIDAK DITEMUKAN !!!");
+        }
+    }
 }
 
 void belibuah(){
@@ -496,7 +525,7 @@ void urutstok(Buah* arr, int n){
 int carinama(Buah* arr, int n, string nama){
     if (n == 0){
         cout << "!!! daftar buah kosong !!!" << endl;
-        return;
+        return -1;
     }
     for (int i = 0; i < n; i++){
         if (arr[i].nama == nama){
@@ -506,10 +535,11 @@ int carinama(Buah* arr, int n, string nama){
                     lihatbuah(j);
                 }
             }
-            return;
+            return i;
         }
     }
     cout << "!!! buah tidak ditemukan !!!" << endl;
+    return -1;
 }
 
 void cariharga(int target){
