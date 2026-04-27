@@ -283,8 +283,77 @@ void hapusUser(){
 
 void belibuah(){
     judulpnjng("PEMBELIAN BUAH");
-}
+    try{
+        if(totalbuah == 0){
+            cout << "!!! daftar buah kosong !!!" << endl;
+            return;
+        }
+        lihat_buah();
+        int pilihBuah, jumlahBeli;
+        cout << "masukkan nomor buah yang ingin dibeli : ";
+        cin >> pilihBuah;
 
+        if(cin.fail()){
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            throw invalid_argument("input harus berupa angka");
+        }
+
+        if(pilihBuah < 1 || pilihBuah > totalbuah){
+            throw out_of_range("nomor buah tidak tersedia");
+        }
+
+        cout << "masukkan jumlah beli (kg) : ";
+        cin >> jumlahBeli;
+
+        if(cin.fail()){
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            throw invalid_argument("jumlah beli harus angka");
+        }
+        if(jumlahBeli <= 0){
+            throw invalid_argument("jumlah beli harus lebih dari 0");
+        }
+        int index = pilihBuah - 1;
+        if(daftarBuah[index].stok < jumlahBeli){
+            throw runtime_error("stok buah tidak mencukupi");
+        }
+        int totalHarga = daftarBuah[index].harga * jumlahBeli;
+        int userIndex = -1;
+        for(int i = 0; i < jumlahpengguna; i++){
+            if(pengguna[i].username == username){
+                userIndex = i;
+                break;
+            }
+        }
+        if(userIndex == -1){
+            throw runtime_error("data pengguna tidak ditemukan");
+        }
+        if(pengguna[userIndex].saldo < totalHarga){
+            throw runtime_error("saldo anda tidak cukup");
+        }
+
+        pengguna[userIndex].saldo -= totalHarga;
+        daftarBuah[index].stok -= jumlahBeli;
+
+        if(daftarBuah[index].stok == 0){
+            daftarBuah[index].status = "habis";
+        }
+
+        cout << "\n==========================================" << endl;
+        cout << "         PEMBELIAN BERHASIL" << endl;
+        cout << "==========================================" << endl;
+        cout << "Nama buah   : " << daftarBuah[index].nama << endl;
+        cout << "Jumlah beli : " << jumlahBeli << " kg" << endl;
+        cout << "Total bayar : Rp" << totalHarga << endl;
+        cout << "Sisa saldo  : Rp" << pengguna[userIndex].saldo << endl;
+        cout << "Sisa stok   : " << daftarBuah[index].stok << " kg" << endl;
+        cout << "==========================================" << endl;
+
+    }catch(exception &e){
+        cout << "\n[ERROR] " << e.what() << endl;
+    }
+}
 void lihatriwayat(){
     judulpnjng("RIWAYAT PEMBELIAN");
 }
