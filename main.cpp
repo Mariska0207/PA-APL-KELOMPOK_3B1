@@ -131,18 +131,22 @@ void lihat_buah(){
     }
     cout << "=========================================================\n";
 }
-void lihatbuah(int index){
+
+void headerbuah(){
     cout << left << setw(5) << "No"
-        << setw(20) << "nama buah"
-        << setw(10) << "harga"
-        << setw(10) << "stok"
-        << setw(10) << "status" << endl;
+        << setw(20) << "Nama Buah"
+        << setw(10) << "Harga"
+        << setw(10) << "Stok"
+        << setw(10) << "Status" << endl;
+    cout << "=========================================================\n";
+}
+
+void lihatbuah(int index){
     cout << left << setw(5) << index+1
         << setw(20) << daftarBuah[index].nama
         << setw(10) << daftarBuah[index].harga
         << setw(10) << daftarBuah[index].stok
         << setw(10) << daftarBuah[index].status << endl;
-    cout << "=========================================================\n";
 }
 
 void tambahBuah(){
@@ -151,7 +155,7 @@ void tambahBuah(){
         cout << "!!! daftar buah penuh !!!" << endl;
     }else{
         bool ada;
-        cin.ignore();
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
         do{
             ada = false;
             cout << "masukkan nama buah : ";
@@ -421,33 +425,60 @@ void urutstok(Buah* arr, int n){
 }
 
 int carinama(Buah* arr, int n, string nama){
-    for (int i = 0; i < n; i++) {
-        if ((arr + i)->nama == nama){
-            return i;
+    if (n == 0){
+        cout << "!!! daftar buah kosong !!!" << endl;
+        return;
+    }
+    for (int i = 0; i < n; i++){
+        if (arr[i].nama == nama){
+            headerbuah();
+            for (int j = i; j < n; j++){
+                if (arr[j].nama == nama){
+                    lihatbuah(j);
+                }
+            }
+            return;
         }
     }
-    return -1;
+    cout << "!!! buah tidak ditemukan !!!" << endl;
 }
 
-int cariharga(int target){
-    if (totalbuah == 0) return -1;
+void cariharga(int target){
     int n = totalbuah;
-    int step = sqrt(n);
+    if (n == 0){
+        cout << "!!! data kosong !!!" << endl;
+        return;
+    }
+    urutharga(daftarBuah, totalbuah);
+    int step = (int)sqrt(n);
     int prev = 0;
-    while (prev < n && daftarBuah[min(step, n)-1].harga < target) {
+    while (prev < n && daftarBuah[min(step, n)-1].harga < target){
         prev = step;
         step += (int)sqrt(n);
-        if (prev >= n) return -1;
+        if (prev >= n){
+            cout << "!!! buah tidak ditemukan !!!\n";
+            return;
+        }
     }
-    int batas = step;
-    if (batas > n) batas = n;
+    int batas = min(step, n);
     while (prev < batas){
-        if(daftarBuah[prev].harga == target){
-            return prev;
+        if (daftarBuah[prev].harga == target){
+            int i = prev;
+            while (i >= 0 && daftarBuah[i].harga == target){
+                i--;
+            }
+            i++;
+            cout << "hasil ditemukan:" << endl;
+            headerbuah();
+            while (i < n && daftarBuah[i].harga == target){
+                lihatbuah(i);
+                i++;
+            }
+            return;
         }
         prev++;
     }
-    return -1;
+    cout << "!!! buah tidak ditemukan !!!\n";
 }
 
 void menulihat(){
@@ -499,45 +530,19 @@ void menulihat(){
                 }
             case 4:
                 judulpnjng("CARI BERDASARKAN NAMA");
-                if(totalbuah == 0){
-                    cout << "!!! daftar buah kosong !!!" << endl;
-                    system("pause");
-                    continue;
-                }else{
-                    cout << "masukkan nama buah yang ingin dicari : ";
-                    cin >> namabuah;
-                    cin.ignore();
-                    int index = carinama(daftarBuah, totalbuah, namabuah);
-                    if(index == -1){
-                        cout << "!!! buah tidak ditemukan !!!" << endl;
-                    }else{
-                        cout << "buah ditemukan pada index ke-" << index << endl;
-                        lihatbuah(index);
-                    }
-                    system("pause");
-                    break;
-                }
+                cout << "masukkan nama buah yang ingin dicari : ";
+                cin >> namabuah;
+                carinama(daftarBuah, totalbuah, namabuah);
+                system("pause");
+                break;
             case 5:
                 judulpnjng("CARI BERDASARKAN HARGA");
-                if(totalbuah == 0){
-                    cout << "!!! daftar buah kosong !!!" << endl;
-                    system("pause");
-                    continue;
-                }else{
-                    cout << "masukkan harga yang ingin dicari : ";
-                    int targetharga;
-                    cin >> targetharga;
-                    cin.ignore();
-                    int index = cariharga(targetharga);
-                    if(index == -1){
-                        cout << "!!! buah tidak ditemukan !!!" << endl;
-                    }else{
-                        cout << "buah ditemukan pada index ke-" << index << endl;
-                        lihatbuah(index);
-                    }
-                    system("pause");
-                    break;
-                }
+                cout << "masukkan harga yang ingin dicari : ";
+                int targetharga;
+                cin >> targetharga;
+                cariharga(targetharga);
+                system("pause");
+                break;
             case 6:
                 keluar = true;
                 break;
