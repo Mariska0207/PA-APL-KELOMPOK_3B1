@@ -28,11 +28,16 @@ struct topup{
 };
 
 #define MAX 100
-Buah daftarBuah[MAX];
+string riwayat[MAX][MAX];
+int jumlahRiwayat[MAX] = {0};
 string username, password, namabuah;
-int pilihan, totalbuah = 0, percobaan = 0, jumlahpengguna = 1;
+int pilihan, totalbuah = 3, percobaan = 0, jumlahpengguna = 1;
 int jumlahTopUp = 0; topup daftarTopUp[MAX];
-
+Buah daftarBuah[MAX] = {
+    {"apel", 20000, 10, "tersedia"},
+    {"jeruk", 15000, 5, "tersedia"},
+    {"mangga", 30000, 8, "tersedia"},
+};
 nama_pengguna pengguna[MAX] = {
     {"kicaw", "123", 100000}
 };
@@ -316,9 +321,6 @@ void hapusUser(){
 
 void belibuah(){
     judulpnjng("PEMBELIAN BUAH");
-    static string riwayat[MAX][MAX];
-    static int jumlahRiwayat[MAX] = {0};
-
     try{
         if(totalbuah == 0){
             cout << "!!! daftar buah kosong !!!" << endl;
@@ -400,8 +402,6 @@ void belibuah(){
 }
 void lihatriwayat(){
     judulpnjng("RIWAYAT PEMBELIAN");
-    static string riwayat[MAX][MAX];
-    static int jumlahRiwayat[MAX] = {0};
     int userIndex = -1;
 
     for(int i = 0; i < jumlahpengguna; i++){
@@ -410,24 +410,20 @@ void lihatriwayat(){
             break;
         }
     }
-
     if(userIndex == -1){
         cout << "!!! pengguna tidak ditemukan !!!" << endl;
         return;
     }
-
     if(jumlahRiwayat[userIndex] == 0){
         cout << "belum ada riwayat pembelian." << endl;
         return;
     }
-
     cout << left << setw(5) << "No"
-         << setw(35) << "Riwayat Pembelian" << endl;
+        << setw(35) << "Riwayat Pembelian" << endl;
     cout << "==================================================" << endl;
-
     for(int i = 0; i < jumlahRiwayat[userIndex]; i++){
         cout << left << setw(5) << i + 1
-             << setw(35) << riwayat[userIndex][i] << endl;
+            << setw(35) << riwayat[userIndex][i] << endl;
     }
     cout << "==================================================" << endl;
 }
