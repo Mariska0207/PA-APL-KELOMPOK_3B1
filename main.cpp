@@ -316,6 +316,9 @@ void hapusUser(){
 
 void belibuah(){
     judulpnjng("PEMBELIAN BUAH");
+    static string riwayat[MAX][MAX];
+    static int jumlahRiwayat[MAX] = {0};
+
     try{
         if(totalbuah == 0){
             cout << "!!! daftar buah kosong !!!" << endl;
@@ -333,9 +336,8 @@ void belibuah(){
         }
 
         if(pilihBuah < 1 || pilihBuah > totalbuah){
-            throw out_of_range("nomor buah tidak tersedia");
+            throw out_of_range("pilihan tidak tersedia");
         }
-
         cout << "masukkan jumlah beli (kg) : ";
         cin >> jumlahBeli;
 
@@ -348,11 +350,14 @@ void belibuah(){
             throw invalid_argument("jumlah beli harus lebih dari 0");
         }
         int index = pilihBuah - 1;
+
         if(daftarBuah[index].stok < jumlahBeli){
             throw runtime_error("stok buah tidak mencukupi");
         }
+
         int totalHarga = daftarBuah[index].harga * jumlahBeli;
         int userIndex = -1;
+
         for(int i = 0; i < jumlahpengguna; i++){
             if(pengguna[i].username == username){
                 userIndex = i;
@@ -362,6 +367,7 @@ void belibuah(){
         if(userIndex == -1){
             throw runtime_error("data pengguna tidak ditemukan");
         }
+
         if(pengguna[userIndex].saldo < totalHarga){
             throw runtime_error("saldo anda tidak cukup");
         }
@@ -372,6 +378,11 @@ void belibuah(){
         if(daftarBuah[index].stok == 0){
             daftarBuah[index].status = "habis";
         }
+        riwayat[userIndex][jumlahRiwayat[userIndex]] =
+            daftarBuah[index].nama + " - " +
+            to_string(jumlahBeli) + " kg - Rp" +
+            to_string(totalHarga);
+        jumlahRiwayat[userIndex]++;
 
         cout << "\n==========================================" << endl;
         cout << "         PEMBELIAN BERHASIL" << endl;
@@ -389,6 +400,36 @@ void belibuah(){
 }
 void lihatriwayat(){
     judulpnjng("RIWAYAT PEMBELIAN");
+    static string riwayat[MAX][MAX];
+    static int jumlahRiwayat[MAX] = {0};
+    int userIndex = -1;
+
+    for(int i = 0; i < jumlahpengguna; i++){
+        if(pengguna[i].username == username){
+            userIndex = i;
+            break;
+        }
+    }
+
+    if(userIndex == -1){
+        cout << "!!! pengguna tidak ditemukan !!!" << endl;
+        return;
+    }
+
+    if(jumlahRiwayat[userIndex] == 0){
+        cout << "belum ada riwayat pembelian." << endl;
+        return;
+    }
+
+    cout << left << setw(5) << "No"
+         << setw(35) << "Riwayat Pembelian" << endl;
+    cout << "==================================================" << endl;
+
+    for(int i = 0; i < jumlahRiwayat[userIndex]; i++){
+        cout << left << setw(5) << i + 1
+             << setw(35) << riwayat[userIndex][i] << endl;
+    }
+    cout << "==================================================" << endl;
 }
 
 void prosesTopUp(){
