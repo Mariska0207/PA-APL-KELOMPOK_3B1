@@ -33,11 +33,18 @@ int jumlahRiwayat[MAX] = {0};
 string username, password, namabuah;
 int pilihan, totalbuah = 3, percobaan = 0, jumlahpengguna = 1;
 int jumlahTopUp = 0; topup daftarTopUp[MAX];
+string pembeli[MAX];
+string barang[MAX];
+int jumlahBeliLaporan[MAX];
+int totalBayar[MAX];
+int totalTransaksi = 0;
+
 Buah daftarBuah[MAX] = {
     {"apel", 20000, 10, "tersedia"},
     {"jeruk", 15000, 5, "tersedia"},
     {"mangga", 30000, 8, "tersedia"},
 };
+
 nama_pengguna pengguna[MAX] = {
     {"kicaw", "123", 100000}
 };
@@ -243,6 +250,36 @@ void hapusBuah(){
 
 void laporanPenjualan(){
     judulpnjng("LAPORAN PENJUALAN");
+
+    if(totalTransaksi == 0){
+        cout << "belum ada transaksi pembelian." << endl;
+        return;
+    }
+
+    cout << left << setw(5)  << "No"
+         << setw(15) << "Username"
+         << setw(20) << "Nama Buah"
+         << setw(10) << "Jumlah"
+         << setw(15) << "Total Harga" << endl;
+
+    cout << "===============================================================" << endl;
+
+    int totalPenjualan = 0;
+
+    for(int i = 0; i < totalTransaksi; i++){
+        cout << left << setw(5)  << i + 1
+             << setw(15) << pembeli[i]
+             << setw(20) << barang[i]
+             << setw(10) << jumlahBeliLaporan[i]
+             << setw(15) << totalBayar[i] << endl;
+
+        totalPenjualan += totalBayar[i];
+    }
+
+    cout << "===============================================================" << endl;
+
+    cout << setw(50) << "TOTAL : "
+         << "Rp" << totalPenjualan << endl;
 }
 
 void konfirmasiTopUp(){
@@ -327,6 +364,7 @@ void belibuah(){
             return;
         }
         lihat_buah();
+
         int pilihBuah, jumlahBeli;
         cout << "masukkan nomor buah yang ingin dibeli : ";
         cin >> pilihBuah;
@@ -340,6 +378,7 @@ void belibuah(){
         if(pilihBuah < 1 || pilihBuah > totalbuah){
             throw out_of_range("pilihan tidak tersedia");
         }
+
         cout << "masukkan jumlah beli (kg) : ";
         cin >> jumlahBeli;
 
@@ -348,9 +387,11 @@ void belibuah(){
             cin.ignore(numeric_limits<streamsize>::max(), '\n');
             throw invalid_argument("jumlah beli harus angka");
         }
+
         if(jumlahBeli <= 0){
             throw invalid_argument("jumlah beli harus lebih dari 0");
         }
+
         int index = pilihBuah - 1;
 
         if(daftarBuah[index].stok < jumlahBeli){
@@ -358,14 +399,15 @@ void belibuah(){
         }
 
         int totalHarga = daftarBuah[index].harga * jumlahBeli;
-        int userIndex = -1;
 
+        int userIndex = -1;
         for(int i = 0; i < jumlahpengguna; i++){
             if(pengguna[i].username == username){
                 userIndex = i;
                 break;
             }
         }
+
         if(userIndex == -1){
             throw runtime_error("data pengguna tidak ditemukan");
         }
@@ -380,11 +422,12 @@ void belibuah(){
         if(daftarBuah[index].stok == 0){
             daftarBuah[index].status = "habis";
         }
-        riwayat[userIndex][jumlahRiwayat[userIndex]] =
-            daftarBuah[index].nama + " - " +
-            to_string(jumlahBeli) + " kg - Rp" +
-            to_string(totalHarga);
-        jumlahRiwayat[userIndex]++;
+
+        pembeli[totalTransaksi] = username;
+        barang[totalTransaksi] = daftarBuah[index].nama;
+        jumlahBeliLaporan[totalTransaksi] = jumlahBeli;
+        totalBayar[totalTransaksi] = totalHarga;
+        totalTransaksi++;
 
         cout << "\n==========================================" << endl;
         cout << "         PEMBELIAN BERHASIL" << endl;
@@ -402,6 +445,28 @@ void belibuah(){
 }
 void lihatriwayat(){
     judulpnjng("RIWAYAT PEMBELIAN");
+    bool ada = false;
+
+    cout << left << setw(5) << "No"
+         << setw(20) << "Nama Buah"
+         << setw(15) << "Jumlah"
+         << setw(15) << "Total Harga" << endl;
+
+    cout << "====================================================" << endl;
+
+    int no = 1;
+
+    for(int i = 0; i < totalTransaksi; i++){
+        if(pembeli[i] == username){
+            cout << left << setw(5) << no++
+                 << setw(20) << barang[i]
+                 << setw(15) << jumlahBeliLaporan[i]
+                 << setw(15) << totalBayar[i] << endl;
+            ada = true;
+        }
+    }
+
+    if(!ada){
     int userIndex = -1;
 
     for(int i = 0; i < jumlahpengguna; i++){
@@ -416,8 +481,8 @@ void lihatriwayat(){
     }
     if(jumlahRiwayat[userIndex] == 0){
         cout << "belum ada riwayat pembelian." << endl;
-        return;
     }
+    cout << "====================================================" << endl;
     cout << left << setw(5) << "No"
         << setw(35) << "Riwayat Pembelian" << endl;
     cout << "==================================================" << endl;
