@@ -320,7 +320,7 @@ void laporanPenjualan(){
     judulpnjng("LAPORAN PENJUALAN");
 
     if(totalTransaksi == 0){
-        cout << "belum ada transaksi pembelian." << endl;
+        cout << "Belum ada transaksi pembelian." << endl;
         return;
     }
 
