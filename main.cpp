@@ -4,6 +4,7 @@
 #include <stdexcept>
 #include <limits>
 #include <vector>
+#include <windows.h>
 using namespace std;
 
 bool login_admin = false;
@@ -38,6 +39,15 @@ nama_pengguna pengguna[MAX] = {
     {"kicaw", "123", 100000}
 };
 
+void progressBar(){
+    cout << "[";
+    for(int i = 0; i < 20; i++){
+        cout << ">";
+        Sleep(50);
+    }
+    cout << "]" << endl;
+}
+
 void takvalid(){
     cout << "!!! pilihan tidak valid !!!" << endl;
     system("pause");
@@ -60,9 +70,9 @@ bool cek_username(string username, int index){
 }
 
 void registrasi(){
-    cout << "=============================" << endl;
+    cout << "=========================================================" << endl;
     cout << "           REGISTER" << endl;
-    cout << "=============================" << endl;
+    cout << "=========================================================" << endl;
     if (jumlahpengguna < MAX){
         cout << "masukkan username : ";
         cin >> username;
@@ -73,9 +83,10 @@ void registrasi(){
             system("pause");
             return;
         }
-        cout << "^^^^^^^^^^^^^^^^^^^^^^^^^^^^" << endl;
+        progressBar();
+        cout << "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^" << endl;
         cout << "  REGISTRASI ANDA BERHASIL" << endl;
-        cout << "^^^^^^^^^^^^^^^^^^^^^^^^^^^^" << endl;
+        cout << "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^" << endl;
         pengguna[jumlahpengguna].username = username;
         pengguna[jumlahpengguna].password = password;
         jumlahpengguna++;
@@ -86,29 +97,31 @@ void registrasi(){
 }
 
 bool admin_login(string &username, string &password){
-    cout << "=============================" << endl;
+    cout << "=========================================================" << endl;
     cout << "           ADMIN" << endl;
-    cout << "=============================" << endl;
+    cout << "=========================================================" << endl;
     cout << "MASUKKAN USERNAME : ";
     cin >> username;
     cout << "MASUKKAN PASSWORD : ";
     cin >> password;
     if(username == "admin" && password == "123"){
+        progressBar();
         return true;
     }
     return false;
 }
 
 bool login_pengguna(string &username, string &password){
-    cout << "=============================" << endl;
+    cout << "=========================================================" << endl;
     cout << "       PENGGUNA BIASA" << endl;
-    cout << "=============================" << endl;
+    cout << "=========================================================" << endl;
     cout << "MASUKKAN USERNAME : ";
     cin >> username;
     cout << "MASUKKAN PASSWORD : ";
     cin >> password;
     for(int i = 0; i < jumlahpengguna; i++){
         if(username == pengguna[i].username && password == pengguna[i].password){
+            progressBar();
             return true;
         }
     }
@@ -166,28 +179,52 @@ void tambahBuah(){
     if(totalbuah >= MAX){
         cout << "!!! daftar buah penuh !!!" << endl;
     }else{
-        bool ada;
-        cin.ignore(numeric_limits<streamsize>::max(), '\n');
-        do{
-            ada = false;
-            cout << "masukkan nama buah : ";
-            getline(cin, daftarBuah[totalbuah].nama);
-            for(int i = 0; i < totalbuah; i++){
-                if(daftarBuah[totalbuah].nama == daftarBuah[i].nama){
-                    cout << "nama buah sudah ada" << endl;
-                    ada = true;
-                    break;
+        try{
+            bool ada;
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            do{
+                ada = false;
+                cout << "masukkan nama buah : ";
+                getline(cin, daftarBuah[totalbuah].nama);
+                for(int i = 0; i < totalbuah; i++){
+                    if(daftarBuah[totalbuah].nama == daftarBuah[i].nama){
+                        cout << "nama buah sudah ada" << endl;
+                        ada = true;
+                        break;
+                    }
                 }
+            }while(ada);
+            cout << "masukkan harga buah : ";
+            cin >> daftarBuah[totalbuah].harga;
+            if(cin.fail()){
+                cin.clear();
+                cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                throw invalid_argument("!!! input harus berupa angka !!!");
             }
-        }while(ada);
-        cout << "masukkan harga buah : ";
-        cin >> daftarBuah[totalbuah].harga;
-        cout << "masukkan stok buah (kg) : ";
-        cin >> daftarBuah[totalbuah].stok;
-        cout << "masukkan status buah : ";
-        cin >> daftarBuah[totalbuah].status;
-        totalbuah++;
-        judulpnjng("BUAH BERHASIL DITAMBAHKAN");
+            if(daftarBuah[totalbuah].harga < 1000){
+                throw invalid_argument("!!! harga tidak valid !!!");
+            }
+            cout << "masukkan stok buah (kg) : ";
+            cin >> daftarBuah[totalbuah].stok;
+            if(cin.fail()){
+                cin.clear();
+                cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                throw invalid_argument("!!! input harus berupa angka !!!");
+            }
+            if(daftarBuah[totalbuah].stok < 1){
+                throw invalid_argument("!!! stok tidak valid !!!");
+            }
+            cout << "masukkan status buah(tersedia/habis) : ";
+            cin >> daftarBuah[totalbuah].status;
+            if(daftarBuah[totalbuah].status != "tersedia" && daftarBuah[totalbuah].status != "habis"){
+                throw invalid_argument("!!! status tidak valid !!!");
+            }
+            totalbuah++;
+            progressBar();
+            judulpnjng("BUAH BERHASIL DITAMBAHKAN");
+        }catch(exception &e){
+            cout << "\n[ERROR] " << e.what() << endl;
+        }
     }
 }
 
@@ -197,20 +234,49 @@ void updateBuah(){
         cout << "!!! daftar buah kosong !!!" << endl;
     }else{
         lihat_buah();
-        int no_update;
-        cout << "masukkan NOMOR buah yang ingin di update (1-" << totalbuah << "): ";
-        cin >> no_update;
-        cin.ignore();
-        if(no_update >= 1 && no_update <= totalbuah){
-            cout << "masukkan harga baru buah: ";
-            cin >> daftarBuah[no_update - 1].harga;
-            cout << "masukkan stok baru buah: ";
-            cin >> daftarBuah[no_update - 1].stok;
-            cout << "masukkan status baru buah: ";
-            cin >> daftarBuah[no_update - 1].status;
-            judulpnjng("BUAH BERHASIL DIUPDATE");
-        }else{
-            judulpnjng("!!! BUAH TIDAK DITEMUKAN !!!");
+        try{
+            int no_update;
+            cout << "masukkan NOMOR buah yang ingin di update (1-" << totalbuah << "): ";
+            cin >> no_update;
+            if(cin.fail()){
+                cin.clear();
+                cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                throw invalid_argument("!!! input harus berupa angka !!!");
+            }
+            cin.ignore();
+            if(no_update >= 1 && no_update <= totalbuah){
+                cout << "masukkan harga baru buah: ";
+                cin >> daftarBuah[no_update - 1].harga;
+                if(cin.fail()){
+                    cin.clear();
+                    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                    throw invalid_argument("!!! input harus berupa angka !!!");
+                }
+                if(daftarBuah[no_update - 1].harga < 1000){
+                    throw invalid_argument("!!! harga tidak valid !!!");
+                }
+                cout << "masukkan stok baru buah: ";
+                cin >> daftarBuah[no_update - 1].stok;
+                if(cin.fail()){
+                    cin.clear();
+                    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                    throw invalid_argument("!!! input harus berupa angka !!!");
+                }
+                if(daftarBuah[no_update - 1].stok < 1){
+                    throw invalid_argument("!!! stok tidak valid !!!");
+                }
+                cout << "masukkan status baru buah: ";
+                cin >> daftarBuah[no_update - 1].status;
+                if(daftarBuah[no_update - 1].status != "tersedia" && daftarBuah[no_update - 1].status != "habis"){
+                    throw invalid_argument("!!! status tidak valid !!!");
+                }
+                progressBar();
+                judulpnjng("BUAH BERHASIL DIUPDATE");
+            }else{
+                judulpnjng("!!! BUAH TIDAK DITEMUKAN !!!");
+            }
+        }catch(exception &e){
+            cout << "\n[ERROR] " << e.what() << endl;
         }
     }
 }
@@ -221,18 +287,28 @@ void hapusBuah(){
         cout << "!!! daftar buah kosong !!!" << endl;
     }else{
         lihat_buah();
-        int no_hapus;
-        cout << "masukkan NOMOR buah yang ingin di hapus (1-" << totalbuah << "): ";
-        cin >> no_hapus;
-        cin.ignore();
-        if(no_hapus >= 1 && no_hapus <= totalbuah){
-            for(int j = no_hapus - 1; j < totalbuah - 1; j++){
-                daftarBuah[j] = daftarBuah[j + 1];
+        try{
+            int no_hapus;
+            cout << "masukkan NOMOR buah yang ingin di hapus (1-" << totalbuah << "): ";
+            cin >> no_hapus;
+            if(cin.fail()){
+                cin.clear();
+                cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                throw invalid_argument("!!! input harus berupa angka !!!");
             }
-            totalbuah--;
-            judulpnjng("BUAH BERHASIL DIHAPUS");
-        }else{
-            judulpnjng("!!! BUAH TIDAK DITEMUKAN !!!");
+            cin.ignore();
+            if(no_hapus >= 1 && no_hapus <= totalbuah){
+                for(int j = no_hapus - 1; j < totalbuah - 1; j++){
+                    daftarBuah[j] = daftarBuah[j + 1];
+                }
+                totalbuah--;
+                progressBar();
+                judulpnjng("BUAH BERHASIL DIHAPUS");
+            }else{
+                judulpnjng("!!! BUAH TIDAK DITEMUKAN !!!");
+            }
+        }catch(exception &e){
+            cout << "\n[ERROR] " << e.what() << endl;
         }
     }
 }
@@ -283,6 +359,7 @@ void konfirmasiTopUp(){
                 if (pengguna[j].username == daftarTopUp[idx].username) {
                     pengguna[j].saldo += daftarTopUp[idx].jumlah;
                     daftarTopUp[idx].status = "selesai";
+                    progressBar();
                     cout << ">>> BERHASIL: saldo pengguna telah ditambahkan.\n" << endl;
                     ditemukan = true;
                     break;
@@ -306,18 +383,28 @@ void hapusUser(){
         cout << "!!! daftar pengguna kosong !!!" << endl;
     }else{
         lihat_user();
-        int no_hapus;
-        cout << "masukkan NOMOR pengguna yang ingin di hapus (1-" << jumlahpengguna << "): ";
-        cin >> no_hapus;
-        cin.ignore();
-        if(no_hapus >= 1 && no_hapus <= jumlahpengguna){
-            for(int j = no_hapus - 1; j < jumlahpengguna - 1; j++){
-                pengguna[j] = pengguna[j + 1];
+        try{
+            int no_hapus;
+            cout << "masukkan NOMOR pengguna yang ingin di hapus (1-" << jumlahpengguna << "): ";
+            cin >> no_hapus;
+            if(cin.fail()){
+                cin.clear();
+                cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                throw invalid_argument("!!! input harus berupa angka !!!");
             }
-            jumlahpengguna--;
-            judulpnjng("USER BERHASIL DIHAPUS");
-        }else{
-            judulpnjng("!!! USER TIDAK DITEMUKAN !!!");
+            cin.ignore();
+            if(no_hapus >= 1 && no_hapus <= jumlahpengguna){
+                for(int j = no_hapus - 1; j < jumlahpengguna - 1; j++){
+                    pengguna[j] = pengguna[j + 1];
+                }
+                jumlahpengguna--;
+                progressBar();
+                judulpnjng("USER BERHASIL DIHAPUS");
+            }else{
+                judulpnjng("!!! USER TIDAK DITEMUKAN !!!");
+            }
+        }catch(exception &e){
+            cout << "\n[ERROR] " << e.what() << endl;
         }
     }
 }
@@ -380,7 +467,7 @@ void belibuah(){
         if(daftarBuah[index].stok == 0){
             daftarBuah[index].status = "habis";
         }
-
+        progressBar();
         cout << "\n==========================================" << endl;
         cout << "         PEMBELIAN BERHASIL" << endl;
         cout << "==========================================" << endl;
@@ -445,6 +532,7 @@ void prosesTopUp(){
         cout << "+" << setfill('-') << setw(46) << "+" << setfill(' ') << endl;
 
         jumlahTopUp++;
+        progressBar();
         cout << "\npermintaan telah dikirim! menunggu konfirmasi admin.\n" << endl;
     } catch (const exception& e) {
         cout << "\n[ERROR] " << e.what() << endl;
@@ -595,8 +683,17 @@ void menulihat(){
         judulpnjng("SILAHKAN PILIH MENU");
         cout << "1. harga termurah-termahal\n2. nama urut(z-a)\n3. stok terdikit-terbanyak\n4. cari berdasarkan nama\n5. cari berdasarkan harga\n6.keluar" << endl;
         cout << "=============================" << endl;
-        cout << "masukkan pilihan anda : ";
-        cin >> pilihan;
+        try{
+            cout << "masukkan pilihan anda : ";
+            cin >> pilihan;
+            if(cin.fail()){
+                cin.clear();
+                cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                throw invalid_argument("input harus berupa angka.");
+            }
+        }catch(exception &e){
+            cout << "\n[ERROR] " << e.what() << endl;
+        }
         system("cls");
         switch(pilihan){
             case 1:
@@ -673,7 +770,7 @@ void menuadmin(){
         cout << "7. hapus user" << endl;
         cout << "8. keluar" << endl;
         cout << "=============================" << endl;
-        cout << "masukkan pilihan anda : ";
+        cout << "MASUKKAN PILIHAN ANDA : ";
         cin >> pilihan;
         system("cls");
         switch(pilihan){
@@ -726,7 +823,7 @@ void menuuser(){
         cout << "5. lihat saldo" << endl;
         cout << "6. keluar" << endl;
         cout << "=============================" << endl;
-        cout << "masukkan pilihan anda : ";
+        cout << "MASUKKAN PILIHAN ANDA : ";
         cin >> pilihan;
         system("cls");
         switch(pilihan){
