@@ -315,6 +315,36 @@ void hapusBuah(){
 
 void laporanPenjualan(){
     judulpnjng("LAPORAN PENJUALAN");
+
+    if(totalTransaksi == 0){
+        cout << "belum ada transaksi pembelian." << endl;
+        return;
+    }
+
+    cout << left << setw(5)  << "No"
+         << setw(15) << "Username"
+         << setw(20) << "Nama Buah"
+         << setw(10) << "Jumlah"
+         << setw(15) << "Total Harga" << endl;
+
+    cout << "===============================================================" << endl;
+
+    int totalPenjualan = 0;
+
+    for(int i = 0; i < totalTransaksi; i++){
+        cout << left << setw(5)  << i + 1
+             << setw(15) << pembeli[i]
+             << setw(20) << barang[i]
+             << setw(10) << jumlahBeliLaporan[i]
+             << setw(15) << totalBayar[i] << endl;
+
+        totalPenjualan += totalBayar[i];
+    }
+
+    cout << "===============================================================" << endl;
+
+    cout << setw(50) << "TOTAL : "
+         << "Rp" << totalPenjualan << endl;
 }
 
 void konfirmasiTopUp(){
@@ -484,6 +514,52 @@ void belibuah(){
 }
 void lihatriwayat(){
     judulpnjng("RIWAYAT PEMBELIAN");
+    bool ada = false;
+
+    cout << left << setw(5) << "No"
+         << setw(20) << "Nama Buah"
+         << setw(15) << "Jumlah"
+         << setw(15) << "Total Harga" << endl;
+
+    cout << "====================================================" << endl;
+
+    int no = 1;
+
+    for(int i = 0; i < totalTransaksi; i++){
+        if(pembeli[i] == username){
+            cout << left << setw(5) << no++
+                 << setw(20) << barang[i]
+                 << setw(15) << jumlahBeliLaporan[i]
+                 << setw(15) << totalBayar[i] << endl;
+            ada = true;
+        }
+    }
+
+    if(!ada){
+    int userIndex = -1;
+
+    for(int i = 0; i < jumlahpengguna; i++){
+        if(pengguna[i].username == username){
+            userIndex = i;
+            break;
+        }
+    }
+    if(userIndex == -1){
+        cout << "!!! pengguna tidak ditemukan !!!" << endl;
+        return;
+    }
+    if(jumlahRiwayat[userIndex] == 0){
+        cout << "belum ada riwayat pembelian." << endl;
+    }
+    cout << "====================================================" << endl;
+    cout << left << setw(5) << "No"
+        << setw(35) << "Riwayat Pembelian" << endl;
+    cout << "==================================================" << endl;
+    for(int i = 0; i < jumlahRiwayat[userIndex]; i++){
+        cout << left << setw(5) << i + 1
+            << setw(35) << riwayat[userIndex][i] << endl;
+    }
+    cout << "==================================================" << endl;
 }
 
 void prosesTopUp(){
