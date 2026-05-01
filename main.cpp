@@ -29,16 +29,15 @@ struct topup{
     string status;
 };
 
+
 #define MAX 100
 Buah daftarBuah[MAX];
 string username, password, namabuah;
-int pilihan, totalbuah = 0, percobaan = 0, jumlahpengguna = 1;
+int pilihan, totalbuah = 0, percobaan = 0, jumlahpengguna = 1, totalTransaksi = 0;
+string pembeli[MAX], barang[MAX];
 int jumlahTopUp = 0; topup daftarTopUp[MAX];
-string pembeli[MAX];
-string barang[MAX];
-int jumlahBeliLaporan[MAX];
-int totalBayar[MAX];
-int totalTransaksi = 0;
+int totalBayar[MAX], jumlahBeliLaporan[MAX];
+
 nama_pengguna pengguna[MAX] = {
     {"kicaw", "123", 100000}
 };
@@ -350,6 +349,7 @@ void laporanPenjualan(){
     cout << setw(50) << "TOTAL : "
          << "Rp" << totalPenjualan << endl;
 }
+
 void konfirmasiTopUp(){
     try {
         judulpnjng("KONFIRMASI TOP-UP");
