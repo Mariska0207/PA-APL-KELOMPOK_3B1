@@ -32,8 +32,11 @@ struct topup{
 #define MAX 100
 Buah daftarBuah[MAX];
 string username, password, namabuah;
-int pilihan, totalbuah = 0, percobaan = 0, jumlahpengguna = 1;
+int pilihan, totalbuah = 0, percobaan = 0, jumlahpengguna = 1, totalTransaksi = 0;
+string pembeli[MAX], barang[MAX], riwayat[MAX][MAX];
 int jumlahTopUp = 0; topup daftarTopUp[MAX];
+int jumlahRiwayat[MAX] = {0};
+int totalBayar[MAX], jumlahBeliLaporan[MAX];
 
 nama_pengguna pengguna[MAX] = {
     {"kicaw", "123", 100000}
@@ -71,7 +74,7 @@ bool cek_username(string username, int index){
 
 void registrasi(){
     cout << "=========================================================" << endl;
-    cout << "           REGISTER" << endl;
+    cout << "                     REGISTER" << endl;
     cout << "=========================================================" << endl;
     if (jumlahpengguna < MAX){
         cout << "masukkan username : ";
@@ -85,7 +88,7 @@ void registrasi(){
         }
         progressBar();
         cout << "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^" << endl;
-        cout << "  REGISTRASI ANDA BERHASIL" << endl;
+        cout << "              REGISTRASI ANDA BERHASIL" << endl;
         cout << "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^" << endl;
         pengguna[jumlahpengguna].username = username;
         pengguna[jumlahpengguna].password = password;
@@ -98,7 +101,7 @@ void registrasi(){
 
 bool admin_login(string &username, string &password){
     cout << "=========================================================" << endl;
-    cout << "           ADMIN" << endl;
+    cout << "                         ADMIN" << endl;
     cout << "=========================================================" << endl;
     cout << "MASUKKAN USERNAME : ";
     cin >> username;
@@ -113,7 +116,7 @@ bool admin_login(string &username, string &password){
 
 bool login_pengguna(string &username, string &password){
     cout << "=========================================================" << endl;
-    cout << "       PENGGUNA BIASA" << endl;
+    cout << "                    PENGGUNA BIASA" << endl;
     cout << "=========================================================" << endl;
     cout << "MASUKKAN USERNAME : ";
     cin >> username;
@@ -265,7 +268,7 @@ void updateBuah(){
                 if(daftarBuah[no_update - 1].stok < 1){
                     throw invalid_argument("!!! stok tidak valid !!!");
                 }
-                cout << "masukkan status baru buah: ";
+                cout << "masukkan status baru buah (tersedia/habis): ";
                 cin >> daftarBuah[no_update - 1].status;
                 if(daftarBuah[no_update - 1].status != "tersedia" && daftarBuah[no_update - 1].status != "habis"){
                     throw invalid_argument("!!! status tidak valid !!!");
@@ -322,10 +325,10 @@ void laporanPenjualan(){
     }
 
     cout << left << setw(5)  << "No"
-         << setw(15) << "Username"
-         << setw(20) << "Nama Buah"
-         << setw(10) << "Jumlah"
-         << setw(15) << "Total Harga" << endl;
+        << setw(15) << "Username"
+        << setw(20) << "Nama Buah"
+        << setw(10) << "Jumlah"
+        << setw(15) << "Total Harga" << endl;
 
     cout << "===============================================================" << endl;
 
@@ -333,10 +336,10 @@ void laporanPenjualan(){
 
     for(int i = 0; i < totalTransaksi; i++){
         cout << left << setw(5)  << i + 1
-             << setw(15) << pembeli[i]
-             << setw(20) << barang[i]
-             << setw(10) << jumlahBeliLaporan[i]
-             << setw(15) << totalBayar[i] << endl;
+            << setw(15) << pembeli[i]
+            << setw(20) << barang[i]
+            << setw(10) << jumlahBeliLaporan[i]
+            << setw(15) << totalBayar[i] << endl;
 
         totalPenjualan += totalBayar[i];
     }
@@ -344,7 +347,7 @@ void laporanPenjualan(){
     cout << "===============================================================" << endl;
 
     cout << setw(50) << "TOTAL : "
-         << "Rp" << totalPenjualan << endl;
+        << "Rp" << totalPenjualan << endl;
 }
 
 void konfirmasiTopUp(){
@@ -517,9 +520,9 @@ void lihatriwayat(){
     bool ada = false;
 
     cout << left << setw(5) << "No"
-         << setw(20) << "Nama Buah"
-         << setw(15) << "Jumlah"
-         << setw(15) << "Total Harga" << endl;
+        << setw(20) << "Nama Buah"
+        << setw(15) << "Jumlah"
+        << setw(15) << "Total Harga" << endl;
 
     cout << "====================================================" << endl;
 
@@ -528,9 +531,9 @@ void lihatriwayat(){
     for(int i = 0; i < totalTransaksi; i++){
         if(pembeli[i] == username){
             cout << left << setw(5) << no++
-                 << setw(20) << barang[i]
-                 << setw(15) << jumlahBeliLaporan[i]
-                 << setw(15) << totalBayar[i] << endl;
+                << setw(20) << barang[i]
+                << setw(15) << jumlahBeliLaporan[i]
+                << setw(15) << totalBayar[i] << endl;
             ada = true;
         }
     }
@@ -560,6 +563,7 @@ void lihatriwayat(){
             << setw(35) << riwayat[userIndex][i] << endl;
     }
     cout << "==================================================" << endl;
+}
 }
 
 void prosesTopUp(){
