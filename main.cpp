@@ -34,8 +34,6 @@ struct topup{
 Buah daftarBuah[MAX];
 string username, password, namabuah;
 int pilihan, totalbuah = 0, percobaan = 0, jumlahpengguna = 1, totalTransaksi = 0;
-string pembeli[MAX], barang[MAX];
-int jumlahTopUp = 0; topup daftarTopUp[MAX];
 string pembeli[MAX], barang[MAX], riwayat[MAX][MAX];
 int jumlahTopUp = 0; topup daftarTopUp[MAX];
 int jumlahRiwayat[MAX] = {0};
@@ -519,7 +517,7 @@ void belibuah(){
         jumlahBeliLaporan[totalTransaksi] = jumlahBeli;
         totalBayar[totalTransaksi] = totalHarga;
         totalTransaksi++;
-
+        progressBar();
         cout << "\n==========================================" << endl;
         cout << "         PEMBELIAN BERHASIL" << endl;
         cout << "==========================================" << endl;
@@ -562,7 +560,6 @@ void lihatriwayat(){
     }
 
     cout << "====================================================" << endl;
-}
 }
 
 void prosesTopUp(){
