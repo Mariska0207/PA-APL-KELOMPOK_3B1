@@ -29,10 +29,13 @@ struct topup{
     string status;
 };
 
+
 #define MAX 100
 Buah daftarBuah[MAX];
 string username, password, namabuah;
 int pilihan, totalbuah = 0, percobaan = 0, jumlahpengguna = 1, totalTransaksi = 0;
+string pembeli[MAX], barang[MAX];
+int jumlahTopUp = 0; topup daftarTopUp[MAX];
 string pembeli[MAX], barang[MAX], riwayat[MAX][MAX];
 int jumlahTopUp = 0; topup daftarTopUp[MAX];
 int jumlahRiwayat[MAX] = {0};
@@ -320,7 +323,7 @@ void laporanPenjualan(){
     judulpnjng("LAPORAN PENJUALAN");
 
     if(totalTransaksi == 0){
-        cout << "belum ada transaksi pembelian." << endl;
+        cout << "Belum ada transaksi pembelian." << endl;
         return;
     }
 
@@ -444,12 +447,15 @@ void hapusUser(){
 
 void belibuah(){
     judulpnjng("PEMBELIAN BUAH");
+
     try{
         if(totalbuah == 0){
             cout << "!!! daftar buah kosong !!!" << endl;
             return;
         }
+
         lihat_buah();
+
         int pilihBuah, jumlahBeli;
         cout << "masukkan nomor buah yang ingin dibeli : ";
         cin >> pilihBuah;
@@ -461,7 +467,7 @@ void belibuah(){
         }
 
         if(pilihBuah < 1 || pilihBuah > totalbuah){
-            throw out_of_range("nomor buah tidak tersedia");
+            throw out_of_range("pilihan tidak tersedia");
         }
 
         cout << "masukkan jumlah beli (kg) : ";
@@ -472,14 +478,19 @@ void belibuah(){
             cin.ignore(numeric_limits<streamsize>::max(), '\n');
             throw invalid_argument("jumlah beli harus angka");
         }
+
         if(jumlahBeli <= 0){
             throw invalid_argument("jumlah beli harus lebih dari 0");
         }
+
         int index = pilihBuah - 1;
+
         if(daftarBuah[index].stok < jumlahBeli){
             throw runtime_error("stok buah tidak mencukupi");
         }
+
         int totalHarga = daftarBuah[index].harga * jumlahBeli;
+
         int userIndex = -1;
         for(int i = 0; i < jumlahpengguna; i++){
             if(pengguna[i].username == username){
@@ -487,9 +498,11 @@ void belibuah(){
                 break;
             }
         }
+
         if(userIndex == -1){
             throw runtime_error("data pengguna tidak ditemukan");
         }
+
         if(pengguna[userIndex].saldo < totalHarga){
             throw runtime_error("saldo anda tidak cukup");
         }
@@ -500,7 +513,13 @@ void belibuah(){
         if(daftarBuah[index].stok == 0){
             daftarBuah[index].status = "habis";
         }
-        progressBar();
+
+        pembeli[totalTransaksi] = username;
+        barang[totalTransaksi] = daftarBuah[index].nama;
+        jumlahBeliLaporan[totalTransaksi] = jumlahBeli;
+        totalBayar[totalTransaksi] = totalHarga;
+        totalTransaksi++;
+
         cout << "\n==========================================" << endl;
         cout << "         PEMBELIAN BERHASIL" << endl;
         cout << "==========================================" << endl;
@@ -539,30 +558,10 @@ void lihatriwayat(){
     }
 
     if(!ada){
-    int userIndex = -1;
-
-    for(int i = 0; i < jumlahpengguna; i++){
-        if(pengguna[i].username == username){
-            userIndex = i;
-            break;
-        }
-    }
-    if(userIndex == -1){
-        cout << "!!! pengguna tidak ditemukan !!!" << endl;
-        return;
-    }
-    if(jumlahRiwayat[userIndex] == 0){
         cout << "belum ada riwayat pembelian." << endl;
     }
+
     cout << "====================================================" << endl;
-    cout << left << setw(5) << "No"
-        << setw(35) << "Riwayat Pembelian" << endl;
-    cout << "==================================================" << endl;
-    for(int i = 0; i < jumlahRiwayat[userIndex]; i++){
-        cout << left << setw(5) << i + 1
-            << setw(35) << riwayat[userIndex][i] << endl;
-    }
-    cout << "==================================================" << endl;
 }
 }
 
