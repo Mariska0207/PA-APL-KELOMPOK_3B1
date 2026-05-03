@@ -208,7 +208,7 @@ void tambahBuah(){
             if(daftarBuah[totalbuah].harga < 1000){
                 throw invalid_argument("!!! harga tidak valid !!!");
             }
-            cout << "masukkan stok buah (kg) : ";
+            cout << "masukkan stok buah : ";
             cin >> daftarBuah[totalbuah].stok;
             if(cin.fail()){
                 cin.clear();
@@ -468,7 +468,7 @@ void belibuah(){
             throw out_of_range("pilihan tidak tersedia");
         }
 
-        cout << "masukkan jumlah beli (kg) : ";
+        cout << "masukkan jumlah beli : ";
         cin >> jumlahBeli;
 
         if(cin.fail()){
@@ -522,10 +522,10 @@ void belibuah(){
         cout << "         PEMBELIAN BERHASIL" << endl;
         cout << "==========================================" << endl;
         cout << "Nama buah   : " << daftarBuah[index].nama << endl;
-        cout << "Jumlah beli : " << jumlahBeli << " kg" << endl;
+        cout << "Jumlah beli : " << jumlahBeli << " pcs" << endl;
         cout << "Total bayar : Rp" << totalHarga << endl;
         cout << "Sisa saldo  : Rp" << pengguna[userIndex].saldo << endl;
-        cout << "Sisa stok   : " << daftarBuah[index].stok << " kg" << endl;
+        cout << "Sisa stok   : " << daftarBuah[index].stok << endl;
         cout << "==========================================" << endl;
 
     }catch(exception &e){
