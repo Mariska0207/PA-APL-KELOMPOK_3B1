@@ -58,9 +58,13 @@ void takvalid(){
 }
 
 void judulpnjng(string judul){
-    cout << "=========================================================" << endl;
-    cout << setw(35) << judul << setw(30) << endl;
-    cout << "=========================================================\n";
+    int lebar = 57; // sesuaikan dengan garis kamu
+    int panjang = judul.length();
+    int kiri = (lebar - panjang) / 2;
+
+    cout << string(lebar, '=') << endl;
+    cout << string(kiri, ' ') << judul << endl;
+    cout << string(lebar, '=') << endl;
 }
 
 bool cek_username(string username, int index){
@@ -151,6 +155,7 @@ void lihat_buah(){
 }
 
 void headerbuah(){
+    cout << "=========================================================" << endl;
     cout << left << setw(5) << "No"
         << setw(20) << "Nama Buah"
         << setw(10) << "Harga"
