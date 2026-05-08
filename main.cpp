@@ -27,7 +27,6 @@ struct topup{
     string status;
 };
 
-
 #define MAX 100
 Buah daftarBuah[MAX];
 string username, password, namabuah;
@@ -40,22 +39,30 @@ nama_pengguna pengguna[MAX] = {
     {"kicaw", "123", 100000}
 };
 
+void setcolor(int color){
+    SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), color);
+}
+
 void progressBar(){
+    setcolor(10);
     cout << "\n[";
     for(int i = 0; i < 20; i++){
         cout << "▮";
         Sleep(50);
     }
     cout << " ]\n";
+    setcolor(7);
 }
 
-
 void takvalid(){
+    setcolor(12);
     cout << "!!! pilihan tidak valid !!!" << endl;
+    setcolor(7);
     system("pause");
 }
 
 void judulpnjng(string judul){
+    setcolor(11);
     int lebar = 57;
     int panjang = judul.length();
     int kiri = (lebar - panjang) / 2;
@@ -63,6 +70,7 @@ void judulpnjng(string judul){
     cout << string(lebar, '=') << endl;
     cout << string(kiri, ' ') << judul << endl;
     cout << string(lebar, '=') << endl;
+    setcolor(7);
 }
 
 bool cek_username(string username, int index){
@@ -76,9 +84,7 @@ bool cek_username(string username, int index){
 }
 
 void registrasi(){
-    cout << "=========================================================" << endl;
-    cout << "                     REGISTER" << endl;
-    cout << "=========================================================" << endl;
+    judulpnjng("REGISTRASI 📝");
     if (jumlahpengguna < MAX){
         cout << "masukkan username : "; 
         getline(cin, username);
@@ -91,27 +97,31 @@ void registrasi(){
             throw invalid_argument("!!! password tidak boleh kosong !!!");
         }
         if(cek_username(username, 0)){
+            setcolor(12);
             cout << "!!! username sudah ada !!!" << endl;
+            setcolor(7);
             system("pause");
             return;
         }
         progressBar();
+        setcolor(10);
         cout << "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^" << endl;
-        cout << "        >>>>>> REGISTRASI ANDA BERHASIL <<<<<<" << endl;
+        cout << "        >>>>>> REGISTRASI ANDA BERHASIL ✅ <<<<<<" << endl;
         cout << "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^" << endl;
+        setcolor(7);
         pengguna[jumlahpengguna].username = username;
         pengguna[jumlahpengguna].password = password;
         jumlahpengguna++;
         system("pause");
     }else{
+        setcolor(12);
         cout << "!!! daftar pengguna penuh !!!" << endl;
+        setcolor(7);
     }
 }
 
 bool admin_login(string &username, string &password){
-    cout << "=========================================================" << endl;
-    cout << "                      💻 ADMIN 💻" << endl;
-    cout << "=========================================================" << endl;
+    judulpnjng("LOGIN ADMIN 💻");
     cout << "MASUKKAN USERNAME : ";
     getline(cin, username);
     if(username.empty()){
@@ -130,9 +140,7 @@ bool admin_login(string &username, string &password){
 }
 
 bool login_pengguna(string &username, string &password){
-    cout << "=========================================================" << endl;
-    cout << "                    PENGGUNA BIASA" << endl;
-    cout << "=========================================================" << endl;
+    judulpnjng("LOGIN USER 👥");
     cout << "MASUKKAN USERNAME : ";
     getline(cin, username);
     if(username.empty()){
@@ -153,56 +161,77 @@ bool login_pengguna(string &username, string &password){
 }
 
 void lihat_buah(){
+    setcolor(27);
     cout << left << setw(5) << "No"
     << setw(20) << "Nama Buah"
     << setw(10) << "Harga"
     << setw(10) << "Stok"
-    << setw(10) << "Status" << endl;
+    << setw(12) << "Status" << endl;
+    setcolor(11);
     cout << "=========================================================\n";
+    setcolor(7);
     
     for(int i = 0; i < totalbuah; i++){
         cout << left << setw(5) << i+1
-        << setw(20) << daftarBuah[i].nama
-        << setw(10) << daftarBuah[i].harga
-        << setw(10) << daftarBuah[i].stok
+        << setw(20) << daftarBuah[i].nama; setcolor(14);
+        cout << setw(10) << daftarBuah[i].harga; setcolor(7);
+        cout << setw(10) << daftarBuah[i].stok
         << setw(10) << daftarBuah[i].status << endl;
     }
+    setcolor(11);
     cout << "=========================================================\n";
+    setcolor(7);
 }
 
 void headerbuah(){
+    setcolor(11);
     cout << "=========================================================" << endl;
+    setcolor(27);
     cout << left << setw(5) << "No"
         << setw(20) << "Nama Buah"
         << setw(10) << "Harga"
         << setw(10) << "Stok"
-        << setw(10) << "Status" << endl;
+        << setw(12) << "Status" << endl;
+    setcolor(11);
     cout << "=========================================================\n";
+    setcolor(7);
 }
 
 void lihatbuah(int index){
     cout << left << setw(5) << index+1
-        << setw(20) << daftarBuah[index].nama
-        << setw(10) << daftarBuah[index].harga
-        << setw(10) << daftarBuah[index].stok
+        << setw(20) << daftarBuah[index].nama; setcolor(14);
+        cout << setw(10) << daftarBuah[index].harga; setcolor(7);
+        cout << setw(10) << daftarBuah[index].stok
         << setw(10) << daftarBuah[index].status << endl;
+    setcolor(11);
+    cout << "=========================================================\n";
+    setcolor(7);
 }
 
 void lihat_user(){
+    setcolor(27);
     cout << left << setw(5) << "No"
     << setw(20) << "Username"
-    << setw(10) << "Password" << endl;
+    << setw(32) << "Password" << endl;
+    setcolor(11);
+    cout << "=========================================================\n";
+    setcolor(7);
     for(int i = 0; i < jumlahpengguna; i++){
         cout << left << setw(5) << i+1
         << setw(20) << pengguna[i].username
         << setw(10) << pengguna[i].password << endl;
     }
+    setcolor(11);
+    cout << "=========================================================\n";
+    setcolor(7);
 }
 
 void tambahBuah(){
-    judulpnjng("TAMBAH DAFTAR BUAH");
+    judulpnjng("TAMBAH DAFTAR BUAH 🍉");
     if(totalbuah >= MAX){
+        setcolor(12);
         cout << "!!! daftar buah penuh !!!";
+        setcolor(7);
     }else{
         try{
             bool ada;
@@ -227,8 +256,11 @@ void tambahBuah(){
                 }
             }while(ada);
             string temp;
-            cout << "masukkan harga buah : ";
+            cout << "masukkan harga buah :";
+            setcolor(14);
+            cout << " Rp";
             getline(cin, temp);
+            setcolor(7);
             if(temp.empty()) throw invalid_argument("!!! harga tidak boleh kosong !!!");
             for(char c : temp) if(!isdigit(c)) throw invalid_argument("!!! harga harus angka !!!");
             daftarBuah[totalbuah].harga = stol(temp);   
@@ -238,7 +270,7 @@ void tambahBuah(){
             getline(cin, temp);
             if(temp.empty()) throw invalid_argument("!!! stok tidak boleh kosong !!!");
             for(char c : temp) if(!isdigit(c)) throw invalid_argument("!!! stok harus angka !!!");
-            daftarBuah[totalbuah].stok = stoi(temp);           
+            daftarBuah[totalbuah].stok = stol(temp);           
             if(daftarBuah[totalbuah].stok < 1) throw invalid_argument("!!! stok minimal 1 !!!");
 
             cout << "masukkan status buah(tersedia/habis) : ";
@@ -250,19 +282,29 @@ void tambahBuah(){
 
             totalbuah++;
             progressBar();
-            judulpnjng(">>>>>>>>>> BUAH BERHASIL DITAMBAHKAN <<<<<<<<<<");
+            setcolor(10);
+            cout << "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^" << endl;
+            cout << "        >>>>>> BUAH BERHASIL DITAMBAHKAN ✅ <<<<<<" << endl;
+            cout << "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^" << endl;
+            setcolor(7);
         }catch(out_of_range &e){
+            setcolor(12);
             cout << "\n[ERROR] input terlalu panjang." << endl;
+            setcolor(7);
         }catch(exception &e){
+            setcolor(12);
             cout << "\n[ERROR] " << e.what() << endl;
+            setcolor(7);
         }
     }
 }
 
 void updateBuah(){
-    judulpnjng("UPDATE DAFTAR BUAH");
+    judulpnjng("UPDATE DAFTAR BUAH 🫐");
     if(totalbuah == 0){
+        setcolor(12);
         cout << "!!! daftar buah kosong !!!" << endl;
+        setcolor(7);
     }else{
         lihat_buah();
         try{
@@ -270,29 +312,33 @@ void updateBuah(){
             cout << "masukkan NOMOR buah yang ingin di update (1-" << totalbuah << "): ";
             getline(cin, No);
             if(No.empty()) throw invalid_argument("!!! nomor tidak boleh kosong !!!");
+            for(char c : No) if(!isdigit(c)) throw invalid_argument("!!! harga harus angka !!!");
             int no_update = stoi(No);
 
             if(no_update >= 1 && no_update <= totalbuah){
                 string temp;
-                cout << "masukkan harga baru buah: ";
+                cout << "masukkan harga baru buah :";
+                setcolor(14);
+                cout << " Rp";
                 getline(cin, temp);
+                setcolor(7);
                 if(temp.empty()) throw invalid_argument("!!! harga tidak boleh kosong !!!");
                 for(char c : temp) if(!isdigit(c)) throw invalid_argument("!!! harga harus angka !!!");
-                daftarBuah[no_update - 1].harga = stol(temp);
-                
-                if(daftarBuah[no_update - 1].harga < 1000){
+                long int harganew = stol(temp);
+                if(harganew < 1000){
                     throw invalid_argument("!!! harga minimal Rp1000 !!!");
                 }
+                daftarBuah[no_update - 1].harga = stol(temp);
 
                 cout << "masukkan stok baru buah: ";
                 getline(cin, temp);
                 if(temp.empty()) throw invalid_argument("!!! stok tidak boleh kosong !!!");
                 for(char c : temp) if(!isdigit(c)) throw invalid_argument("!!! stok harus angka !!!");
-                daftarBuah[no_update - 1].stok = stoi(temp);
-
-                if(daftarBuah[no_update - 1].stok < 1){
+                long int stoknew = stol(temp);
+                if(stoknew < 1){
                     throw invalid_argument("!!! stok minimal 1 !!!");
                 }
+                daftarBuah[no_update - 1].stok = stoi(temp);
 
                 cout << "masukkan status baru buah (tersedia/habis): ";
                 getline(cin, daftarBuah[no_update - 1].status);
@@ -303,22 +349,34 @@ void updateBuah(){
                     throw invalid_argument("!!! status tidak valid !!!");
                 }
                 progressBar();
-                judulpnjng("BUAH  DIUPDATE");
+                setcolor(10);
+                cout << "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^" << endl;
+                cout << "          >>>>>> BUAH BERHASIL DIUPDATE ✅ <<<<<<" << endl;
+                cout << "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^" << endl;
+                setcolor(7);
             }else{
-                judulpnjng("!!! BUAH TIDAK DITEMUKAN !!!");
+                setcolor(12);
+                cout << "!!! BUAH TIDAK DITEMUKAN !!!" << endl;
+                setcolor(7);
             }
         }catch(out_of_range &e){
+            setcolor(12);
             cout << "\n[ERROR] input terlalu panjang." << endl;
+            setcolor(7);
         }catch(exception &e){
+            setcolor(12);
             cout << "\n[ERROR] " << e.what() << endl;
+            setcolor(7);
         }
     }
 }
 
 void hapusBuah(){
-    judulpnjng("HAPUS DAFTAR BUAH");
+    judulpnjng("HAPUS DAFTAR BUAH 🗑️");
     if(totalbuah == 0){
+        setcolor(12);
         cout << "!!! daftar buah kosong !!!" << endl;
+        setcolor(7);
     }else{
         lihat_buah();
         try{
@@ -326,6 +384,7 @@ void hapusBuah(){
             cout << "masukkan NOMOR buah yang ingin di hapus (1-" << totalbuah << "): ";
             getline(cin, No); 
             if(No.empty()) throw invalid_argument("!!! nomor tidak boleh kosong !!!");
+            for(char c : No) if(!isdigit(c)) throw invalid_argument("!!! harga harus angka !!!");
             int no_hapus = stoi(No);
             if(no_hapus >= 1 && no_hapus <= totalbuah){
                 for(int j = no_hapus - 1; j < totalbuah - 1; j++){
@@ -333,59 +392,74 @@ void hapusBuah(){
                 }
                 totalbuah--;
                 progressBar();
-                judulpnjng(">>>>>>>>>> BUAH BERHASIL DIHAPUS <<<<<<<<<<");
+                setcolor(10);
+                cout << "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^" << endl;
+                cout << "           >>>>>> BUAH BERHASIL DIHAPUS ✅ <<<<<<" << endl;
+                cout << "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^" << endl;
+                setcolor(7);
             }else{
-                judulpnjng("!!! BUAH TIDAK DITEMUKAN !!!");
+                setcolor(12);
+                cout << "!!! BUAH TIDAK DITEMUKAN !!!" << endl;
+                setcolor(7);
             }
         }catch(out_of_range &e){
+            setcolor(12);
             cout << "\n[ERROR] input terlalu panjang." << endl;
+            setcolor(7);
         }catch(exception &e){
+            setcolor(12);
             cout << "\n[ERROR] " << e.what() << endl;
+            setcolor(7);
         }
     }
 }
 
 void laporanPenjualan(){
-    judulpnjng("LAPORAN PENJUALAN");
+    judulpnjng("LAPORAN PENJUALAN 📚");
 
     if(totalTransaksi == 0){
+        setcolor(12);
         cout << "Belum ada transaksi pembelian." << endl;
+        setcolor(7);
         return;
     }
-
+    setcolor(27);
     cout << left << setw(5)  << "No"
         << setw(15) << "Username"
-        << setw(20) << "Nama Buah"
+        << setw(15) << "Nama Buah"
         << setw(10) << "Jumlah"
-        << setw(15) << "Total Harga" << endl;
-    cout << "===============================================================" << endl;
+        << setw(12) << "Total Harga" << endl;
+    setcolor(11);
+    cout << "=========================================================" << endl;
+    setcolor(7);
 
     int totalPenjualan = 0;
     for(int i = 0; i < totalTransaksi; i++){
         cout << left << setw(5)  << i + 1
             << setw(15) << pembeli[i]
-            << setw(20) << barang[i]
-            << setw(10) << jumlahBeliLaporan[i]
-            << setw(15) << totalBayar[i] << endl;
+            << setw(15) << barang[i]
+            << setw(10) << jumlahBeliLaporan[i]; setcolor(14);
+            cout << setw(12) << totalBayar[i] << endl; setcolor(7);
         totalPenjualan += totalBayar[i];
     }
-    cout << "===============================================================" << endl;
-    cout << setw(50) << "TOTAL : "
-        << "Rp" << totalPenjualan << endl;
+    setcolor(11);
+    cout << "=========================================================" << endl;
+    setcolor(7);
+    cout << setw(44) << "TOTAL : "; setcolor(14); cout << "Rp" << totalPenjualan << endl; setcolor(7);
 }
 
 void konfirmasiTopUp(){
     try {
-        judulpnjng("KONFIRMASI TOP-UP");
+        judulpnjng("KONFIRMASI TOP-UP 🏦");
         cout << "+" << setfill('-') << setw(5) << "+" << setw(20) << "+" << setw(15) << "+" << setw(15) << "+" << endl;
         cout << setfill(' ') << "| " << left << setw(3) << "no" << " | " << setw(18) << "username" << "| " << setw(13) << "jumlah" << "| " << setw(12) << "status" << "|" << endl;
         cout << "+" << setfill('-') << setw(5) << "+" << setw(20) << "+" << setw(15) << "+" << setw(15) << "+" << setfill(' ') << endl;
 
         if (jumlahTopUp == 0) {
-            cout << "| " << setw(52) << left << "tidak ada riwayat top-up." << " |" << endl;
+            cout << "| "; setcolor(12); cout  << setw(52) << left << "tidak ada riwayat top-up."; setcolor(7); cout << " |" << endl;
         } else {
             for (int i = 0; i < jumlahTopUp; i++) {
-                cout << "| " << left << setw(3) << i + 1 << " | " << setw(18) << daftarTopUp[i].username << "| Rp" << setw(10) << daftarTopUp[i].jumlah << " | " << setw(12) << daftarTopUp[i].status << "|" << endl;
+                cout << "| " << left << setw(3) << i + 1 << " | " << setw(18) << daftarTopUp[i].username << "| "; setcolor(14); cout << "Rp" << setw(10) << daftarTopUp[i].jumlah; setcolor(7); cout << " | " << setw(12) << daftarTopUp[i].status << "|" << endl;
             }
         }
         cout << "+" << setfill('-') << setw(5) << "+" << setw(20) << "+" << setw(15) << "+" << setw(15) << "+" << setfill(' ') << endl;
@@ -410,7 +484,9 @@ void konfirmasiTopUp(){
                     pengguna[j].saldo += daftarTopUp[idx].jumlah;
                     daftarTopUp[idx].status = "selesai";
                     progressBar();
-                    cout << ">>>>> BERHASIL: saldo pengguna telah ditambahkan <<<<<\n" << endl;
+                    setcolor(10);
+                    cout << ">>>>> BERHASIL: saldo pengguna telah ditambahkan ✅ <<<<<\n" << endl;
+                    setcolor(7);
                     ditemukan = true;
                     break;
                 }
@@ -418,21 +494,29 @@ void konfirmasiTopUp(){
             if (!ditemukan) throw runtime_error("!!! pengguna tidak ditemukan di sistem !!!");
         } else if (konfirmasi == "n" || konfirmasi == "N") {
             daftarTopUp[idx].status = "ditolak";
+            setcolor(12);
             cout << ">>> GAGAL: permintaan top-up ditolak.\n" << endl;
+            setcolor(7);
         } else {
             throw invalid_argument("!!! input tidak valid, harap masukkan 'y' atau 'n' !!!");
         }
     } catch (const out_of_range& e) {
+        setcolor(12);
         cout << "\n[ERROR] input terlalu panjang." << endl;
+        setcolor(7);
     } catch (const exception& e) {
+        setcolor(12);
         cout << "\n[ERROR] " << e.what() << endl;
+        setcolor(7);
     }
 }
 
 void hapusUser(){
-    judulpnjng("HAPUS USER");
+    judulpnjng("HAPUS USER 🗑️");
     if(jumlahpengguna == 0){
+        setcolor(12);
         cout << "!!! daftar pengguna kosong !!!" << endl;
+        setcolor(7);
     }else{
         lihat_user();
         try{
@@ -448,30 +532,44 @@ void hapusUser(){
                 }
                 jumlahpengguna--;
                 progressBar();
-                judulpnjng(">>>>>>>>>> USER BERHASIL DIHAPUS <<<<<<<<<<");
+                setcolor(10);
+                cout << "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^" << endl;
+                cout << "          >>>>>> USER BERHASIL DIHAPUS ✅ <<<<<<" << endl;
+                cout << "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^" << endl;
+                setcolor(7);
             }else{
-                judulpnjng("!!! USER TIDAK DITEMUKAN !!!");
+                setcolor(12);
+                cout << "!!! USER TIDAK DITEMUKAN !!!" << endl;
+                setcolor(7);
             }
         }catch(out_of_range &e){
+            setcolor(12);
             cout << "\n[ERROR] input terlalu panjang." << endl;
+            setcolor(7);
         }catch(exception &e){
+            setcolor(12);
             cout << "\n[ERROR] " << e.what() << endl;
+            setcolor(7);
         }
     }
 }
 
 void belibuah(){
-    judulpnjng("PEMBELIAN BUAH");
+    judulpnjng("PEMBELIAN BUAH 🛒");
 
     try{
         if(totalbuah == 0){
+            setcolor(12);
             cout << "!!! daftar buah kosong !!!" << endl;
+            setcolor(7);
             return;
         }
         lihat_buah();
         string sPilih, sJumlah;
         cout << "masukkan nomor buah yang ingin dibeli : ";
         getline(cin, sPilih);
+        if(sPilih.empty()) throw invalid_argument("!!! nomor tidak boleh kosong !!!");
+        for(char c : sPilih) if(!isdigit(c)) throw invalid_argument("!!! nomor harus angka !!!");
         int pilihBuah = stoi(sPilih);
         if(pilihBuah < 1 || pilihBuah > totalbuah){
             throw out_of_range("pilihan tidak tersedia");
@@ -511,30 +609,41 @@ void belibuah(){
         totalBayar[totalTransaksi] = totalHarga;
         totalTransaksi++;
         progressBar();
+        setcolor(10);
         cout << "\n==========================================" << endl;
-        cout << "      >>>>>> PEMBELIAN BERHASIL <<<<<<" << endl;
+        cout << "      >>>>>> PEMBELIAN BERHASIL ✅ <<<<<<" << endl;
         cout << "==========================================" << endl;
+        setcolor(7);
         cout << "Nama buah   : " << daftarBuah[index].nama << endl;
         cout << "Jumlah beli : " << jumlahBeli << " pcs" << endl;
-        cout << "Total bayar : Rp" << totalHarga << endl;
-        cout << "Sisa saldo  : Rp" << pengguna[userIndex].saldo << endl;
+        cout << "Total bayar : "; setcolor(14); cout << "Rp" << totalHarga << endl; setcolor(7);
+        cout << "Sisa saldo  : "; setcolor(14); cout << "Rp" << pengguna[userIndex].saldo << endl; setcolor(7);
         cout << "Sisa stok   : " << daftarBuah[index].stok << endl;
+        setcolor(10);
         cout << "==========================================" << endl;
+        setcolor(7);
 
     }catch(out_of_range &e){
+        setcolor(12);
         cout << "\n[ERROR] input terlalu panjang." << endl;
+        setcolor(7);
     }catch(exception &e){
+        setcolor(12);
         cout << "\n[ERROR] " << e.what() << endl;
+        setcolor(7);
     }
 }
 void lihatriwayat(){
-    judulpnjng("RIWAYAT PEMBELIAN");
+    judulpnjng("RIWAYAT PEMBELIAN 📜");
     bool ada = false;
+    setcolor(27);
     cout << left << setw(5) << "No"
         << setw(20) << "Nama Buah"
         << setw(15) << "Jumlah"
-        << setw(15) << "Total Harga" << endl;
-    cout << "====================================================" << endl;
+        << setw(17) << "Total Harga" << endl;
+    setcolor(11);
+    cout << "=========================================================" << endl;
+    setcolor(7);
 
     int no = 1;
     for(int i = 0; i < totalTransaksi; i++){
@@ -542,26 +651,35 @@ void lihatriwayat(){
             cout << left << setw(5) << no++
                 << setw(20) << barang[i]
                 << setw(15) << jumlahBeliLaporan[i]
-                << setw(15) << totalBayar[i] << endl;
+                << setw(15); setcolor(14); cout << totalBayar[i] << endl; setcolor(7);
             ada = true;
         }
     }
     if(!ada){
+        setcolor(12);
         cout << "belum ada riwayat pembelian." << endl;
+        setcolor(7);
     }
-    cout << "====================================================" << endl;
+    setcolor(11);
+    cout << "=========================================================" << endl;
+    setcolor(7);
 }
 
 void prosesTopUp(){
-    judulpnjng("TOP-UP SALDO");
+    judulpnjng("TOP-UP SALDO 💸");
     try {
         if (jumlahTopUp >= MAX) {
+            setcolor(12);
             cout << "!!! antrean top-up penuh, silakan hubungi admin !!!" << endl;
+            setcolor(7);
             return;
         }
-        cout << "masukkan jumlah top-up: Rp"; 
+        cout << "masukkan jumlah top-up:"; 
         string input;
+        setcolor(14);
+        cout << " Rp";
         getline(cin, input);
+        setcolor(7);
         if (input.empty()) {
             throw invalid_argument("!!! input tidak boleh kosong !!!");
         }
@@ -588,25 +706,31 @@ void prosesTopUp(){
         cout << setfill(' ') << "|" << setw(36) << right << "RINGKASAN PERMINTAAN TOP-UP" << setw(10) << "|" << endl;
         cout << "+" << setfill('-') << setw(46) << "+" << endl;
         cout << setfill(' ') << "| " << left << setw(13) << "username" << " : " << setw(26) << daftarTopUp[jumlahTopUp].username << "  |" << endl;
-        cout << "| " << left << setw(13) << "jumlah"   << " : Rp" << setw(23) << daftarTopUp[jumlahTopUp].jumlah << "   |" << endl;
+        cout << "| " << left << setw(13) << "jumlah"   << " : "; setcolor(14); cout << "Rp" << setw(26) << daftarTopUp[jumlahTopUp].jumlah; setcolor(7); cout << "|" << endl;
         cout << "| " << left << setw(13) << "status"   << " : " << setw(26) << daftarTopUp[jumlahTopUp].status << "  |" << endl;
-        cout << "+" << setfill('-') << setw(46) << "+" << setfill(' ') << endl;
+        cout << "-" << setfill('-') << setw(46) << "-" << endl;
 
         jumlahTopUp++;
         progressBar();
+        setcolor(10);
         cout << "\npermintaan telah dikirim! menunggu konfirmasi admin.\n" << endl;
+        setcolor(7);
     } catch (const out_of_range& e) {
+        setcolor(12);
         cout << "\n[ERROR] input terlalu panjang." << endl;
+        setcolor(7);
     } catch (const exception& e) {
+        setcolor(12);
         cout << "\n[ERROR] " << e.what() << endl;
+        setcolor(7);
     }
 }
 
 void lihatsaldo(){
-    judulpnjng("LIHAT SALDO");
+    judulpnjng("LIHAT SALDO 🤑");
     for (int i = 0; i < jumlahpengguna; i++) {
         if (pengguna[i].username == username) {
-            cout << "saldo anda saat ini: Rp" << pengguna[i].saldo << "\n" << endl;
+            cout << "saldo anda saat ini: "; setcolor(14); cout <<  "Rp" << pengguna[i].saldo << "\n" << endl; setcolor(7);
             return;
         }
     }
@@ -683,7 +807,9 @@ void urutstok(Buah* arr, int n){
 
 int carinama(Buah* arr, int n, string nama){
     if (n == 0){
+        setcolor(12);
         cout << "!!! daftar buah kosong !!!" << endl;
+        setcolor(7);
         return -1;
     }
     bool found = false;
@@ -695,15 +821,18 @@ int carinama(Buah* arr, int n, string nama){
         }
     }
     if(found) return 0;
-    
-    cout << "!!! buah tidak ditemukan !!!" << endl;
+        setcolor(12);
+        cout << "!!! buah tidak ditemukan !!!" << endl;
+        setcolor(7);
     return -1;
 }
 
 void cariharga(int target){
     int n = totalbuah;
     if (n == 0){
+        setcolor(12);
         cout << "!!! data kosong !!!" << endl;
+        setcolor(7);
         return;
     }
     urutharga(daftarBuah, totalbuah);
@@ -713,7 +842,6 @@ void cariharga(int target){
         prev = step;
         step += (int)sqrt(n);
         if (prev >= n){
-            cout << "!!! buah tidak ditemukan !!!\n";
             return;
         }
     }
@@ -725,7 +853,9 @@ void cariharga(int target){
                 i--;
             }
             i++;
+            setcolor(10);
             cout << "hasil ditemukan:" << endl;
+            setcolor(7);
             headerbuah();
             while (i < n && daftarBuah[i].harga == target){
                 lihatbuah(i);
@@ -735,28 +865,36 @@ void cariharga(int target){
         }
         prev++;
     }
+    setcolor(12);
     cout << "!!! buah tidak ditemukan !!!\n";
+    setcolor(7);
 }
 
 void menulihat(){
     bool keluar = false;
     while(!keluar){
         system("cls");
-        judulpnjng("SILAHKAN PILIH MENU");
-        cout << "1. harga termurah-termahal\n2. nama urut(z-a)\n3. stok terdikit-terbanyak\n4. cari berdasarkan nama\n5. cari berdasarkan harga\n6.keluar" << endl;
-        cout << "=============================" << endl;
+        judulpnjng("SILAHKAN PILIH MENU 𐙚˖˚");
+        cout << "1. harga termurah-termahal\n2. nama urut(z-a)\n3. stok terdikit-terbanyak\n4. cari berdasarkan nama\n5. cari berdasarkan harga\n6. keluar" << endl;
+        setcolor(11);
+        cout << "=========================================================\n";
+        setcolor(7);
         try{
             string sPilih;
-            cout << "masukkan pilihan anda : ";
+            setcolor(9);
+            cout << "MASUKKAN PILIHAN ANDA : ";
             getline(cin, sPilih);
+            setcolor(7);
             if(sPilih.empty()) throw invalid_argument("!!! pilihan tidak boleh kosong !!!");
             pilihan = stoi(sPilih);
         system("cls");
         switch(pilihan){
             case 1:
-                judulpnjng("HARGA TERMURAH-TERMAHAL");
+                judulpnjng("HARGA TERMURAH-TERMAHAL 📈");
                 if(totalbuah == 0){
+                    setcolor(12);
                     cout << "!!! daftar buah kosong !!!" << endl;
+                    setcolor(7);
                     system("pause");
                     continue;
                 }else{
@@ -766,9 +904,11 @@ void menulihat(){
                     continue;
                 }
             case 2:
-                judulpnjng("NAMA URUT (Z-A)");
+                judulpnjng("NAMA URUT (Z-A) 🔤");
                 if(totalbuah == 0){
+                    setcolor(12);
                     cout << "!!! daftar buah kosong !!!" << endl;
+                    setcolor(7);
                     system("pause");
                     continue;
                 }else{
@@ -778,9 +918,11 @@ void menulihat(){
                     continue;
                 }
             case 3:
-                judulpnjng("STOK TERDIKIT-TERBANYAK");
+                judulpnjng("STOK TERDIKIT-TERBANYAK 📈");
                 if(totalbuah == 0){
+                    setcolor(12);
                     cout << "!!! daftar buah kosong !!!" << endl;
+                    setcolor(7);
                     system("pause");
                     continue;
                 }else{
@@ -790,7 +932,7 @@ void menulihat(){
                     continue;
                 }
             case 4:
-                judulpnjng("CARI BERDASARKAN NAMA");
+                judulpnjng("CARI BERDASARKAN NAMA 🔍");
                 cout << "masukkan nama buah yang ingin dicari : ";
                 getline(cin, namabuah);
                 if(namabuah.empty()){
@@ -800,7 +942,7 @@ void menulihat(){
                 system("pause");
                 break;
             case 5:{
-                judulpnjng("CARI BERDASARKAN HARGA");
+                judulpnjng("CARI BERDASARKAN HARGA 🔍");
                 cout << "masukkan harga yang ingin dicari : ";
                 string input;
                 getline(cin, input);
@@ -825,10 +967,14 @@ void menulihat(){
                 continue;
         }
         } catch(out_of_range &e) {
+            setcolor(12);
             cout << "\n[ERROR] input terlalu panjang." << endl;
+            setcolor(7);
             system("pause");
         } catch(exception &e) {
+            setcolor(12);
             cout << "\n[ERROR] " << e.what() << endl;
+            setcolor(7);
             system("pause");
         }
     }
@@ -847,9 +993,12 @@ void menuadmin(){
             cout << "6. konfirmasi top-up" << endl;
             cout << "7. hapus user" << endl;
             cout << "8. keluar" << endl;
-            cout << "=============================" << endl;
+            setcolor(11);
+            cout << "=========================================================\n";
+            setcolor(9);
             cout << "MASUKKAN PILIHAN ANDA : "; string pilihan;
             getline(cin, pilihan);
+            setcolor(7);
             if (pilihan.empty()) {
                 throw invalid_argument("!!! input tidak boleh kosong !!!");
             }
@@ -897,10 +1046,14 @@ void menuadmin(){
                     continue;
             }
         } catch (const out_of_range& e) {
+            setcolor(12);
             cout << "\n[ERROR] input terlalu panjang." << endl;
+            setcolor(7);
             system("pause");
         } catch (const exception& e) {
+            setcolor(12);
             cout << "\n[ERROR] " << e.what() << endl;
+            setcolor(7);
             system("pause");
         }
     }
@@ -917,10 +1070,13 @@ void menuuser(){
             cout << "4. top-up saldo" << endl;
             cout << "5. lihat saldo" << endl;
             cout << "6. keluar" << endl;
-            cout << "=============================" << endl;
+            setcolor(11);
+            cout << "=========================================================\n";
+            setcolor(9);
             cout << "MASUKKAN PILIHAN ANDA : ";
             string input;
             getline(cin, input);
+            setcolor(7);
             if(input.empty()){
                 throw invalid_argument("!!! input tidak boleh kosong !!!");
             }
@@ -960,10 +1116,14 @@ void menuuser(){
                     continue;
             }
         }catch(out_of_range &e){
+            setcolor(12);
             cout << "\n[ERROR] input terlalu panjang." << endl;
+            setcolor(7);
             system("pause");
         }catch(exception &e){
+            setcolor(12);
             cout << "\n[ERROR] " << e.what() << endl;
+            setcolor(7);
             system("pause");
         }
     }
@@ -974,16 +1134,19 @@ int main(){
     while(true){
         while(!login_admin && !login_user){
             system("cls");
-            judulpnjng("SELAMAT DATANG DI TOKO BUAH KICAW");
+            judulpnjng("SELAMAT DATANG DI TOKO BUAH KICAW 🍎");
             cout << "1. LOGIN SEBAGAI ADMIN " << endl;
             cout << "2. LOGIN SEBAGAI PENGGUNA BIASA" << endl;
             cout << "3. REGISTER" << endl;
             cout << "4. KELUAR" << endl;
+            setcolor(11);
             cout << "=========================================================\n";
+            setcolor(9);
             cout << "MASUKKAN PILIHAN ANDA : ";
             try {
                 string input;
                 getline(cin, input);
+                setcolor(7);
 
             if(input.empty()) throw invalid_argument("!!! input tidak boleh kosong !!!");
             for(char c : input) {
@@ -995,7 +1158,11 @@ int main(){
             switch(pilihan){
                 case 1:
                     if(admin_login(username, password)){
-                        judulpnjng(">>>>>>>>>> LOGIN BERHASIL <<<<<<<<<<");
+                        setcolor(10);
+                        cout << "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^" << endl;
+                        cout << "             >>>>>> LOGIN BERHASIL ✅ <<<<<<" << endl;
+                        cout << "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^" << endl;
+                        setcolor(7);
                         system("pause");
                         login_admin = true;
                         login_user = false;
@@ -1005,7 +1172,9 @@ int main(){
                     }else{
                         percobaan++;
                         if(percobaan == 3){
+                            setcolor(13);
                             cout << "percobaan login anda habis, program keluar" << endl;
+                            setcolor(7);
                             return 0;
                         }else{
                             cout << "!!! sisa percobaan " << 3 - percobaan << " kali, coba lagi !!!" << endl;
@@ -1015,7 +1184,11 @@ int main(){
                     }
                 case 2:
                     if(login_pengguna(username, password)){
-                        judulpnjng(">>>>>>>>>> LOGIN BERHASIL <<<<<<<<<<");
+                        setcolor(10);
+                        cout << "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^" << endl;
+                        cout << "             >>>>>> LOGIN BERHASIL ✅ <<<<<<" << endl;
+                        cout << "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^" << endl;
+                        setcolor(7);
                         system("pause");
                         login_admin = false;
                         login_user = true;
@@ -1025,7 +1198,9 @@ int main(){
                     }else{
                         percobaan++;
                         if(percobaan == 3){
+                            setcolor(13);
                             cout << "percobaan login anda habis, program keluar" << endl;
+                            setcolor(7);
                             return 0;
                         }else{
                             cout << "!!! sisa percobaan " << 3 - percobaan << " kali, coba lagi !!!" << endl;
@@ -1036,18 +1211,47 @@ int main(){
                 case 3:
                     registrasi();
                     continue;
-                case 4:
-                    cout << "TERIMA KASIH TELAH  MENGGUNAKAN PROGRAM INI" << endl;
+                case 4:             
+                    setcolor(14);         
+                    cout << "TERIMA KASIH TELAH  MENGGUNAKAN PROGRAM INI\n" << endl;
+                    cout << R"(⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣠⣴⠞⢛⣟⢛⠻⣿⣛⣛⣟⣛⠳⣦⣤⣤⣴⠶⠿⠛⢛⣻⣟⣻⣿⣿⣷⣶⣶⣤⣀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⣴⠾⠛⢉⣠⡾⣿⡿⢿⣷⣶⣤⡈⠉⠉⠛⠻⢯⣥⡀⠀⣀⣤⠶⣻⣿⢻⣿⣿⣯⡍⠙⠻⢿⣿⣦⡀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⣶⠿⠟⢀⣴⠞⠋⠁⢰⣿⡿⢿⣯⣉⣿⣷⠀⠀⠀⠀⠀⠈⣿⠟⠉⠀⢰⣿⣿⢿⣿⣉⣿⣿⡄⠀⠀⠀⠉⣿
+⠀⠀⠀⠀⠀⠀⢀⣤⡾⠋⠃⠀⠀⠻⣧⡀⠀⠀⢸⣿⣿⣿⣿⣿⣿⣿⠀⠀⠀⠀⠀⣸⡇⠀⠀⠀⠸⣿⣿⣿⣿⣿⣿⣿⠃⠀⠀⢀⣴⡟
+⠀⠀⠀⠀⢀⣴⠟⠉⠀⠀⠀⠀⠀⠀⠀⠙⠳⢦⣤⣙⣻⠿⠿⠟⠋⣁⣀⣠⣤⣶⠾⠋⠳⠶⣤⣤⣤⣙⣻⣿⣿⣿⣯⣥⣶⡶⣿⡿⠟⠀
+⠀⠀⠀⣴⣿⠁⠀⠀⠀⠀⢀⣤⠶⠶⠶⠶⣦⣤⣤⣉⡉⠉⠉⠉⠉⠉⠉⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠉⠉⠀⠀⠀⠀⠀⠀⣿⠀⠀⠀
+⠀⢠⣾⠋⠀⠀⠀⠀⠀⠀⢿⣧⡀⠀⠰⣤⣀⣀⠀⠉⠙⠛⠛⠷⠶⢶⣦⣤⣀⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣀⣠⣤⣶⠾⠛⣷⡄⠀
+⣰⡟⠁⠀⠀⠀⠀⠀⠀⠀⠀⠉⠛⠷⣦⣄⡀⠉⠛⠒⠶⢤⣄⠀⠀⠀⠀⠀⠈⠉⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠉⠉⠀⠀⣀⣴⣿⠁⠀
+⠋⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⠙⠳⢶⣤⣄⣀⠀⠀⠈⠉⠉⠛⠓⠂⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢻⡇⢻⡆⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⠉⠛⠻⠷⢶⣤⣤⣤⣤⣤⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣴⠿⠁⠈⢿⡀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⣀⣀⠀⠀⠀⠀⠈⠉⠉⠉⠉⠉⠙⠛⠉⠉⠁⠀⠀⠀⠘⣧
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠸⣿⠉⠛⣷⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠛
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢿⡇⠀⢹⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣼⡇⠀⣼⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⡿⠁⢀⣿⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⡾⠛⠁⠀⠘⠿⠶⠶⣦⣤⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⡾⠋⠀⠀⠀⠀⠀⠀⠀⠀⠈⢉⣿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣼⠟⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⣾⡏⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⡾⠋⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢋⣿⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣼⠟⠁⠀⠀⠀⣀⣤⣤⣀⣀⠀⠀⣀⣴⡿⠋⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⣴⠟⠁⠀⠀⠀⣠⣾⠟⠁⠀⠉⠉⠉⠉⠉⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣤⡾⠛⠁⠀⠀⠀⣠⡾⠋⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⡶⠋⠁⠀⠀⠀⠀⣠⣾⠟⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀)";
+                    setcolor(7);
                     return 0;
                 default:
                     takvalid();
                     continue;
             }
             } catch(out_of_range &e) {
+                setcolor(12);
                 cout << "\n[ERROR] input terlalu panjang " << endl;
+                setcolor(7);
                 system("pause");
             }catch(exception &e){
+                setcolor(12);
                 cout << "\n[ERROR] " << e.what() << endl;
+                setcolor(7);
                 system("pause");
             }
         }
