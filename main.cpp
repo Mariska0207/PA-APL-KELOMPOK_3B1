@@ -307,10 +307,12 @@ void tambahBuah(){
             for(char c : temp) if(!isdigit(c)) throw invalid_argument("!!! stok tidak valid !!!");
             daftarBuah[totalbuah].stok = stol(temp);
 
-            if(daftarBuah[totalbuah].stok <= 0){
+            if(daftarBuah[totalbuah].stok == 0){
                 daftarBuah[totalbuah].status = "habis";
-            }else{
+            } else if (daftarBuah[totalbuah].stok > 0) {
                 daftarBuah[totalbuah].status = "tersedia";
+            } else {
+                throw invalid_argument("!!! stok tidak boleh negatif !!!");
             }
 
             totalbuah++;
@@ -370,10 +372,12 @@ void updateBuah(){
                 long int stoknew = stol(temp);
                 daftarBuah[no_update - 1].stok = stol(temp);
 
-                if(daftarBuah[no_update - 1].stok <= 0){
+                if (daftarBuah[no_update - 1].stok == 0) {
                     daftarBuah[no_update - 1].status = "habis";
-                }else{
+                } else if (daftarBuah[no_update - 1].stok > 0) {
                     daftarBuah[no_update - 1].status = "tersedia";
+                } else {
+                    throw invalid_argument("!!! stok tidak boleh negatif !!!");
                 }
                 
                 progressBar();
@@ -600,11 +604,14 @@ void belibuah(){
         }
         lihat_buah();
         string sPilih, sJumlah;
-        cout << "masukkan nomor buah yang ingin dibeli : ";
+        cout << "masukkan nomor buah yang ingin dibeli (0 untuk kembali): ";
         getline(cin, sPilih);
         if(sPilih.empty()) throw invalid_argument("!!! nomor tidak boleh kosong !!!");
         for(char c : sPilih) if(!isdigit(c)) throw invalid_argument("!!! nomor tidak valid !!!");
         int pilihBuah = stoi(sPilih);
+        if(pilihBuah == 0){
+            cout << endl; return;
+        }
         if(pilihBuah < 1 || pilihBuah > totalbuah){
             throw out_of_range("pilihan tidak tersedia");
         }
@@ -614,10 +621,10 @@ void belibuah(){
         for(char c : sJumlah) if(!isdigit(c)) throw invalid_argument("!!! jumlah tidak valid !!!");
 
         int jumlahBeli = stoi(sJumlah);
-        if(jumlahBeli <= 0) throw invalid_argument("jumlah beli harus lebih dari 0");
+        if(jumlahBeli < 0) throw invalid_argument("!!! jumlah beli harus lebih dari 0 !!!");
         int index = pilihBuah - 1;
         if(daftarBuah[index].stok < jumlahBeli){
-            throw runtime_error("stok buah tidak mencukupi");
+            throw runtime_error("!!! stok buah tidak mencukupi !!!");
         }
         long int totalHarga = daftarBuah[index].harga * jumlahBeli;
         int userIndex = -1;
