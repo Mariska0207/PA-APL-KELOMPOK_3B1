@@ -56,7 +56,7 @@ void progressBar(){
 
 void takvalid(){
     setcolor(12);
-    cout << "!!! pilihan tidak valid !!!" << endl;
+    cout << "!!! ⚠️ pilihan tidak valid !!!" << endl;
     setcolor(7);
     system("pause");
 }
@@ -495,7 +495,7 @@ void konfirmasiTopUp(){
         } else if (konfirmasi == "n" || konfirmasi == "N") {
             daftarTopUp[idx].status = "ditolak";
             setcolor(12);
-            cout << ">>> GAGAL: permintaan top-up ditolak.\n" << endl;
+            cout << ">>> GAGAL: permintaan top-up ditolak  ❌\n" << endl;
             setcolor(7);
         } else {
             throw invalid_argument("!!! input tidak valid, harap masukkan 'y' atau 'n' !!!");
@@ -874,8 +874,8 @@ void menulihat(){
     bool keluar = false;
     while(!keluar){
         system("cls");
-        judulpnjng("SILAHKAN PILIH MENU 𐙚˖˚");
-        cout << "1. harga termurah-termahal\n2. nama urut(z-a)\n3. stok terdikit-terbanyak\n4. cari berdasarkan nama\n5. cari berdasarkan harga\n6. keluar" << endl;
+        judulpnjng("SILAHKAN PILIH MENU 🔍");
+        cout << "1. 📈 harga termurah-termahal\n2. 🔤 nama urut(z-a)\n3. 📦 stok terdikit-terbanyak\n4. 🔎 cari berdasarkan nama\n5. 💲 cari berdasarkan harga\n6. keluar" << endl;
         setcolor(11);
         cout << "=========================================================\n";
         setcolor(7);
@@ -983,16 +983,16 @@ void menulihat(){
 void menuadmin(){
     while(login_admin){
         system("cls");
-        judulpnjng("SILAHKAN PILIH MENU");
+        judulpnjng("MENU ADMIN 🛠️");
         try {
-            cout << "1. tambah daftar buah" << endl;
-            cout << "2. lihat daftar buah" << endl;
-            cout << "3. update harga dan stok buah" << endl;
-            cout << "4. hapus buah" << endl;
-            cout << "5. laporan penjualan" << endl;
-            cout << "6. konfirmasi top-up" << endl;
-            cout << "7. hapus user" << endl;
-            cout << "8. keluar" << endl;
+            cout << "1. 🍉 tambah daftar buah" << endl;
+            cout << "2. 👀 lihat daftar buah" << endl;
+            cout << "3. ✏️  update harga dan stok buah" << endl;
+            cout << "4. 🗑️  hapus buah" << endl;
+            cout << "5. 📊 laporan penjualan" << endl;
+            cout << "6. 💳 konfirmasi top-up" << endl;
+            cout << "7. ❌ hapus user" << endl;
+            cout << "8. 🚪 keluar" << endl;
             setcolor(11);
             cout << "=========================================================\n";
             setcolor(9);
@@ -1063,13 +1063,13 @@ void menuuser(){
     while(login_user){
         try{
             system("cls");
-            judulpnjng("SILAHKAN PILIH MENU");
-            cout << "1. lihat daftar buah" << endl;
-            cout << "2. pembelian buah" << endl;
-            cout << "3. riwayat pembelian" << endl;
-            cout << "4. top-up saldo" << endl;
-            cout << "5. lihat saldo" << endl;
-            cout << "6. keluar" << endl;
+            judulpnjng("MENU USER 👤");
+            cout << "1. 👀 lihat daftar buah" << endl;
+            cout << "2. 🛍️  pembelian buah" << endl;
+            cout << "3. 📜 riwayat pembelian" << endl;
+            cout << "4. 💸 top-up saldo" << endl;
+            cout << "5. 💰 lihat saldo" << endl;
+            cout << "6. 🚪 keluar" << endl;
             setcolor(11);
             cout << "=========================================================\n";
             setcolor(9);
@@ -1135,10 +1135,10 @@ int main(){
         while(!login_admin && !login_user){
             system("cls");
             judulpnjng("SELAMAT DATANG DI TOKO BUAH KICAW 🍎");
-            cout << "1. LOGIN SEBAGAI ADMIN " << endl;
-            cout << "2. LOGIN SEBAGAI PENGGUNA BIASA" << endl;
-            cout << "3. REGISTER" << endl;
-            cout << "4. KELUAR" << endl;
+            cout << "1. 🖥️  LOGIN SEBAGAI ADMIN " << endl;
+            cout << "2. ​👥​ LOGIN SEBAGAI PENGGUNA BIASA" << endl;
+            cout << "3. 📝 REGISTER" << endl;
+            cout << "4. 🚪 KELUAR" << endl;
             setcolor(11);
             cout << "=========================================================\n";
             setcolor(9);
@@ -1173,7 +1173,7 @@ int main(){
                         percobaan++;
                         if(percobaan == 3){
                             setcolor(13);
-                            cout << "percobaan login anda habis, program keluar" << endl;
+                            cout << "percobaan login anda habis, program keluar 💀" << endl;
                             setcolor(7);
                             return 0;
                         }else{
@@ -1199,7 +1199,7 @@ int main(){
                         percobaan++;
                         if(percobaan == 3){
                             setcolor(13);
-                            cout << "percobaan login anda habis, program keluar" << endl;
+                            cout << "percobaan login anda habis, program keluar 💀" << endl;
                             setcolor(7);
                             return 0;
                         }else{
@@ -1213,7 +1213,7 @@ int main(){
                     continue;
                 case 4:             
                     setcolor(14);         
-                    cout << "TERIMA KASIH TELAH  MENGGUNAKAN PROGRAM INI\n" << endl;
+                    cout << "TERIMA KASIH TELAH  MENGGUNAKAN PROGRAM INI 👋 \n" << endl;
                     cout << R"(⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣠⣴⠞⢛⣟⢛⠻⣿⣛⣛⣟⣛⠳⣦⣤⣤⣴⠶⠿⠛⢛⣻⣟⣻⣿⣿⣷⣶⣶⣤⣀⠀⠀⠀
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⣴⠾⠛⢉⣠⡾⣿⡿⢿⣷⣶⣤⡈⠉⠉⠛⠻⢯⣥⡀⠀⣀⣤⠶⣻⣿⢻⣿⣿⣯⡍⠙⠻⢿⣿⣦⡀
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⣶⠿⠟⢀⣴⠞⠋⠁⢰⣿⡿⢿⣯⣉⣿⣷⠀⠀⠀⠀⠀⠈⣿⠟⠉⠀⢰⣿⣿⢿⣿⣉⣿⣿⡄⠀⠀⠀⠉⣿
