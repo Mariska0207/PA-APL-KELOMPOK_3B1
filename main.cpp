@@ -30,7 +30,7 @@ struct topup{
 #define MAX 100
 Buah daftarBuah[MAX];
 string username, password, namabuah;
-int pilihan, totalbuah = 0, percobaan = 0, jumlahpengguna = 1, totalTransaksi = 0;
+int pilihan, totalbuah = 0, percobaan = 0, jumlahpengguna = 1, totalTransaksi = 0, panjangmin = 3, panjangmax = 20;
 string pembeli[MAX], barang[MAX];
 int jumlahTopUp = 0; topup daftarTopUp[MAX];
 int totalBayar[MAX], jumlahBeliLaporan[MAX];
@@ -91,10 +91,16 @@ void registrasi(){
         if(username.empty()){
             throw invalid_argument("!!! username tidak boleh kosong !!!");
         }
+        if(username.length() < panjangmin || username.length() > panjangmax){
+            throw invalid_argument("!!! panjang username minimal 3 karakter dan maksimal 20 karakter !!!");
+        }
         cout << "masukkan password : "; 
         getline(cin, password);
         if(password.empty()){
             throw invalid_argument("!!! password tidak boleh kosong !!!");
+        }
+        if(password.length() < panjangmin || password.length() > panjangmax){
+            throw invalid_argument("!!! panjang username minimal 3 karakter dan maksimal 20 karakter !!!");
         }
         if(cek_username(username, 0)){
             setcolor(12);
@@ -241,6 +247,9 @@ void tambahBuah(){
                 getline(cin, daftarBuah[totalbuah].nama);
                 if(daftarBuah[totalbuah].nama.empty()){
                     throw invalid_argument("!!! nama buah tidak boleh kosong !!!");
+                }
+                if(daftarBuah[totalbuah].nama.length() < panjangmin || daftarBuah[totalbuah].nama.length() > panjangmax){
+                    throw invalid_argument("!!! panjang nama buah minimal 3 karakter dan maksimal 20 karakter !!!");
                 }
                 for(char c : daftarBuah[totalbuah].nama){
                     if(isdigit(c)){
@@ -1177,7 +1186,9 @@ int main(){
                             setcolor(7);
                             return 0;
                         }else{
-                            cout << "!!! sisa percobaan " << 3 - percobaan << " kali, coba lagi !!!" << endl;
+                            setcolor(14);
+                            cout << "\n⚠️  sisa percobaan " << 3 - percobaan << " kali, coba lagi !!!" << endl;
+                            setcolor(7);
                             system("pause");
                         }
                         continue;
@@ -1203,7 +1214,9 @@ int main(){
                             setcolor(7);
                             return 0;
                         }else{
-                            cout << "!!! sisa percobaan " << 3 - percobaan << " kali, coba lagi !!!" << endl;
+                            setcolor(14);
+                            cout << "\n⚠️  sisa percobaan " << 3 - percobaan << " kali, coba lagi !!!" << endl;
+                            setcolor(7);
                             system("pause");
                         }
                         continue;
