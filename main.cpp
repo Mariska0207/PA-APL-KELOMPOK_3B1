@@ -236,14 +236,14 @@ bool login_pengguna(string &username, string &password, bool &balikmenu){
                 progressBar();
                 return true;
             }
-            percobaanuser++;
-            if(percobaanuser < 3){
-                setcolor(14);
-                cout << "\n⚠️  sisa percobaan " << 3 - percobaanuser << " kali, coba lagi !!!\n" << endl;
-                setcolor(7);
-                system("pause");
-                continue;
-            }
+        }
+        percobaanuser++;
+        if(percobaanuser < 3){
+            setcolor(14);
+            cout << "\n⚠️  sisa percobaan " << 3 - percobaanuser << " kali, coba lagi !!!\n" << endl;
+            setcolor(7);
+            system("pause");
+            continue;
         }
     }
     return false;
