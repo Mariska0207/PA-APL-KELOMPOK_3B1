@@ -3,7 +3,6 @@
 #include <cmath>
 #include <stdexcept>
 #include <windows.h>
-#include <string>
 #include <cctype>
 using namespace std;
 
@@ -29,13 +28,20 @@ struct topup{
     string status;
 };
 
+struct transaksi{
+    string pembeli;
+    string barang;
+    long int jumlahbeli;
+    long int totalbayar;
+};
+
+
 #define MAX 100
 Buah daftarBuah[MAX];
+transaksi daftartran[MAX];
 string username, password, namabuah;
 int pilihan, totalbuah = 0, percobaanuser = 0, percobaanadmin = 0, jumlahpengguna = 1, totalTransaksi = 0, panjangmin = 3, panjangmax = 30;
-string pembeli[MAX], barang[MAX];
 int jumlahTopUp = 0; topup daftarTopUp[MAX];
-int totalBayar[MAX], jumlahBeliLaporan[MAX];
 
 nama_pengguna pengguna[MAX] = {
     {"kicaw", "123", 100000}
@@ -56,7 +62,7 @@ void progressBar(){
     setcolor(7);
 }
 
-bool validUsername(const string& str){
+bool validusername(const string& str){
     for(char c : str){
         if(!isalnum((unsigned char)c) && c != '_' && c != '.'){
             return false;
@@ -68,6 +74,9 @@ bool validUsername(const string& str){
 bool validNamaBuah(const string& str){
     for(char c : str){
         if(!isalpha((unsigned char)c) && c != ' '){
+            return false;
+        }
+        if(!isalnum((unsigned char)c) && c != '_' && c != '.'){
             return false;
         }
     }
@@ -117,43 +126,51 @@ bool cek_username(string username, int index){
 
 void registrasi(){
     judulpnjng("REGISTRASI 📝");
-    if (jumlahpengguna < MAX){
-        cout << "masukkan username : "; 
-        getline(cin, username);
-        validpanjangusn(username);
-        if(username.empty()){
-            throw invalid_argument("!!! username tidak boleh kosong !!!");
-        }
-        if(!validUsername(username)){
-            throw invalid_argument("!!! username tidak boleh mengandung karakter spesial seperti !@#$%^&*() dll. !!!");
-        }
-        cout << "masukkan password : "; 
-        getline(cin, password);
-        validpanjangpw(password);
-        if(password.empty()){
-            throw invalid_argument("!!! password tidak boleh kosong !!!");
-        }
-        if(cek_username(username, 0)){
-            setcolor(12);
-            cout << "!!! username sudah ada !!!" << endl;
+    try{
+        if (jumlahpengguna < MAX){
+            cout << "masukkan username : "; 
+            getline(cin, username);
+            if(username.empty()){
+                throw invalid_argument("!!! username tidak boleh kosong !!!");
+            }
+            validpanjangusn(username);
+            if(!validusername(username)){
+                throw invalid_argument("!!! username tidak boleh mengandung karakter spesial seperti !@#$%^&*() dll. !!!");
+            }
+            cout << "masukkan password : "; 
+            getline(cin, password);
+            validpanjangpw(password);
+            if(password.empty()){
+                throw invalid_argument("!!! password tidak boleh kosong !!!");
+            }
+            if(cek_username(username, 0)){
+                setcolor(12);
+                cout << "!!! username sudah ada !!!" << endl;
+                setcolor(7);
+                system("pause");
+                return;
+            }
+            progressBar();
+            setcolor(10);
+            cout << "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^" << endl;
+            cout << "        >>>>>> REGISTRASI ANDA BERHASIL ✅ <<<<<<" << endl;
+            cout << "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^" << endl;
             setcolor(7);
+            pengguna[jumlahpengguna].username = username;
+            pengguna[jumlahpengguna].password = password;
+            pengguna[jumlahpengguna].saldo = 0;
+            jumlahpengguna++;
             system("pause");
-            return;
+        }else{
+            setcolor(12);
+            cout << "!!! daftar pengguna penuh !!!" << endl;
+            setcolor(7);
         }
-        progressBar();
-        setcolor(10);
-        cout << "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^" << endl;
-        cout << "        >>>>>> REGISTRASI ANDA BERHASIL ✅ <<<<<<" << endl;
-        cout << "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^" << endl;
-        setcolor(7);
-        pengguna[jumlahpengguna].username = username;
-        pengguna[jumlahpengguna].password = password;
-        jumlahpengguna++;
-        system("pause");
-    }else{
+    }catch(exception &e){
         setcolor(12);
-        cout << "!!! daftar pengguna penuh !!!" << endl;
+        cout << "\n[ERROR] " << e.what() << endl;
         setcolor(7);
+        system("pause");
     }
 }
 
@@ -174,7 +191,7 @@ bool admin_login(string &username, string &password, bool &balik_menu){
         if(username.empty()){
             throw invalid_argument("!!! username tidak boleh kosong !!!");
         }
-        if(!validUsername(username)){
+        if(!validusername(username)){
             throw invalid_argument("!!! username tidak boleh mengandung karakter spesial seperti !@#$%^&*() dll. !!!");
         }
         cout << "MASUKKAN PASSWORD : ";
@@ -219,7 +236,7 @@ bool login_pengguna(string &username, string &password, bool &balikmenu){
         if(username.empty()){
             throw invalid_argument("!!! username tidak boleh kosong !!!");
         }
-        if(!validUsername(username)){
+        if(!validusername(username)){
             throw invalid_argument("!!! username tidak boleh mengandung karakter spesial seperti !@#$%^&*() dll. !!!");
         }
         cout << "MASUKKAN PASSWORD : ";
@@ -249,7 +266,7 @@ bool login_pengguna(string &username, string &password, bool &balikmenu){
     return false;
 }
 
-void lihat_buah(){
+void lihatbuah(){
     setcolor(27);
     cout << left << setw(5) << "No"
     << setw(20) << "Nama Buah"
@@ -315,6 +332,14 @@ void lihat_user(){
     setcolor(7);
 }
 
+void updateStatus(Buah *buah){
+    if(buah->stok == 0){
+        buah->status = "habis";
+    }else{
+        buah->status = "tersedia";
+    }
+}
+
 void tambahBuah(){
     judulpnjng("TAMBAH DAFTAR BUAH 🍉");
     if(totalbuah >= MAX){
@@ -332,7 +357,7 @@ void tambahBuah(){
                 throw invalid_argument("!!! nama buah tidak boleh dimulai dengan spasi !!!");
             }
             if(daftarBuah[totalbuah].nama.length() < panjangmin || daftarBuah[totalbuah].nama.length() > panjangmax){
-                throw invalid_argument("!!! panjang nama buah minimal 3 karakter dan maksimal 20 karakter !!!");
+                throw invalid_argument("!!! panjang nama buah minimal 3 karakter dan maksimal 30 karakter !!!");
             }
             if(!validNamaBuah(daftarBuah[totalbuah].nama)){
                 throw invalid_argument("!!! nama buah tidak boleh mengandung karakter spesial seperti !@#$%^&*() dll. !!!");
@@ -363,11 +388,7 @@ void tambahBuah(){
             if(temp.empty()) throw invalid_argument("!!! stok tidak boleh kosong !!!");
             for(char c : temp) if(!isdigit(c)) throw invalid_argument("!!! stok tidak valid !!!");
             daftarBuah[totalbuah].stok = stol(temp);
-            if(daftarBuah[totalbuah].stok == 0){
-                daftarBuah[totalbuah].status = "habis";
-            }else{
-                daftarBuah[totalbuah].status = "tersedia";
-            }
+            updateStatus(&daftarBuah[totalbuah]);
 
             totalbuah++;
             progressBar();
@@ -378,7 +399,7 @@ void tambahBuah(){
             setcolor(7);
         }catch(out_of_range &e){
             setcolor(12);
-            cout << "\n[ERROR] angka di luar batas." << endl;
+            cout << "\n[ERROR] " << e.what() << endl;
             setcolor(7);
         }catch(exception &e){
             setcolor(12);
@@ -395,7 +416,7 @@ void updateBuah(){
         cout << "!!! daftar buah kosong !!!" << endl;
         setcolor(7);
     }else{
-        lihat_buah();
+        lihatbuah();
         try{
             string No;
             cout << "masukkan NOMOR buah yang ingin di update (1-" << totalbuah << "): ";
@@ -413,11 +434,10 @@ void updateBuah(){
                 setcolor(7);
                 if(temp.empty()) throw invalid_argument("!!! harga tidak boleh kosong !!!");
                 for(char c : temp) if(!isdigit(c)) throw invalid_argument("!!! harga tidak valid !!!");
-                long int harganew = stol(temp);
-                if(harganew < 1000){
+                daftarBuah[no_update - 1].harga = stol(temp);
+                if(daftarBuah[no_update - 1].harga < 1000){
                     throw invalid_argument("!!! harga minimal Rp1000 !!!");
                 }
-                daftarBuah[no_update - 1].harga = stol(temp);
 
                 cout << "masukkan stok baru buah: ";
                 getline(cin, temp);
@@ -425,11 +445,7 @@ void updateBuah(){
                 for(char c : temp) if(!isdigit(c)) throw invalid_argument("!!! stok tidak valid !!!");
                 long int stoknew = stol(temp);
                 daftarBuah[no_update - 1].stok = stoknew;
-                if (daftarBuah[no_update - 1].stok == 0) {
-                    daftarBuah[no_update - 1].status = "habis";
-                }else{
-                    daftarBuah[no_update - 1].status = "tersedia";
-                }
+                updateStatus(&daftarBuah[no_update - 1]);
                 
                 progressBar();
                 setcolor(10);
@@ -444,7 +460,7 @@ void updateBuah(){
             }
         }catch(out_of_range &e){
             setcolor(12);
-            cout << "\n[ERROR] angka di luar batas." << endl;
+            cout << "\n[ERROR] " << e.what() << endl;
             setcolor(7);
         }catch(exception &e){
             setcolor(12);
@@ -461,7 +477,7 @@ void hapusBuah(){
         cout << "!!! daftar buah kosong !!!" << endl;
         setcolor(7);
     }else{
-        lihat_buah();
+        lihatbuah();
         try{
             string No;
             cout << "masukkan NOMOR buah yang ingin di hapus (1-" << totalbuah << "): ";
@@ -487,7 +503,7 @@ void hapusBuah(){
             }
         }catch(out_of_range &e){
             setcolor(12);
-            cout << "\n[ERROR] angka di luar batas." << endl;
+            cout << "\n[ERROR] " << e.what() << endl;
             setcolor(7);
         }catch(exception &e){
             setcolor(12);
@@ -519,11 +535,11 @@ void laporanPenjualan(){
     int totalPenjualan = 0;
     for(int i = 0; i < totalTransaksi; i++){
         cout << left << setw(5)  << i + 1
-            << setw(15) << pembeli[i]
-            << setw(15) << barang[i]
-            << setw(10) << jumlahBeliLaporan[i]; setcolor(14);
-            cout << setw(12) << totalBayar[i] << endl; setcolor(7);
-        totalPenjualan += totalBayar[i];
+            << setw(15) << daftartran[i].pembeli
+            << setw(15) << daftartran[i].barang
+            << setw(10) << daftartran[i].jumlahbeli; setcolor(14);
+            cout << setw(12) << daftartran[i].totalbayar << endl; setcolor(7);
+        totalPenjualan += daftartran[i].totalbayar;
     }
     setcolor(11);
     cout << "=========================================================" << endl;
@@ -592,7 +608,7 @@ void konfirmasiTopUp(){
         }
     } catch (const out_of_range& e) {
         setcolor(12);
-        cout << "\n[ERROR] input terlalu panjang." << endl;
+        cout << "\n[ERROR] " << e.what() << endl;
         setcolor(7);
     } catch (const exception& e) {
         setcolor(12);
@@ -655,7 +671,7 @@ void belibuah(){
             setcolor(7);
             return;
         }
-        lihat_buah();
+        lihatbuah();
         string sPilih, sJumlah;
         cout << "masukkan nomor buah yang ingin dibeli (0 untuk kembali): ";
         getline(cin, sPilih);
@@ -673,7 +689,7 @@ void belibuah(){
         if(sJumlah.empty()) throw invalid_argument("!!! jumlah tidak boleh kosong !!!");
         for(char c : sJumlah) if(!isdigit(c)) throw invalid_argument("!!! jumlah tidak valid !!!");
 
-        int jumlahBeli = stoi(sJumlah);
+        long int jumlahBeli = stoi(sJumlah);
         if(jumlahBeli <= 0) throw invalid_argument("!!! jumlah beli harus lebih dari 0 !!!");
         int index = pilihBuah - 1;
         if(daftarBuah[index].stok < jumlahBeli){
@@ -696,14 +712,12 @@ void belibuah(){
 
         pengguna[userIndex].saldo -= totalHarga;
         daftarBuah[index].stok -= jumlahBeli;
-        if(daftarBuah[index].stok == 0){
-            daftarBuah[index].status = "habis";
-        }
+        updateStatus(&daftarBuah[index]);
 
-        pembeli[totalTransaksi] = username;
-        barang[totalTransaksi] = daftarBuah[index].nama;
-        jumlahBeliLaporan[totalTransaksi] = jumlahBeli;
-        totalBayar[totalTransaksi] = totalHarga;
+        daftartran[totalTransaksi].pembeli = username;
+        daftartran[totalTransaksi].barang = daftarBuah[index].nama;
+        daftartran[totalTransaksi].jumlahbeli = jumlahBeli;
+        daftartran[totalTransaksi].totalbayar = totalHarga;
         totalTransaksi++;
         progressBar();
         setcolor(10);
@@ -722,7 +736,7 @@ void belibuah(){
 
     }catch(out_of_range &e){
         setcolor(12);
-        cout << "\n[ERROR] angka di luar batas." << endl;
+        cout << "\n[ERROR] " << e.what() << endl;
         setcolor(7);
     }catch(exception &e){
         setcolor(12);
@@ -744,11 +758,11 @@ void lihatriwayat(){
 
     int no = 1;
     for(int i = 0; i < totalTransaksi; i++){
-        if(pembeli[i] == username){
+        if(daftartran[i].pembeli == username){
             cout << left << setw(5) << no++
-                << setw(20) << barang[i]
-                << setw(15) << jumlahBeliLaporan[i]
-                << setw(15); setcolor(14); cout << totalBayar[i] << endl; setcolor(7);
+                << setw(20) << daftartran[i].barang
+                << setw(15) << daftartran[i].jumlahbeli
+                << setw(15); setcolor(14); cout << daftartran[i].totalbayar << endl; setcolor(7);
             ada = true;
         }
     }
@@ -986,93 +1000,88 @@ void menulihat(){
                 }
             }
             pilihan = stoi(sPilih);
-        system("cls");
-        switch(pilihan){
-            case 1:
-                judulpnjng("HARGA TERMURAH-TERMAHAL 📈");
-                if(totalbuah == 0){
-                    setcolor(12);
-                    cout << "!!! daftar buah kosong !!!" << endl;
-                    setcolor(7);
-                    system("pause");
-                    break;
-                }else{
-                    urutharga(daftarBuah, totalbuah);
-                    lihat_buah();
-                    system("pause");
-                    break;
-                }
-            case 2:
-                judulpnjng("NAMA URUT (Z-A) 🔤");
-                if(totalbuah == 0){
-                    setcolor(12);
-                    cout << "!!! daftar buah kosong !!!" << endl;
-                    setcolor(7);
-                    system("pause");
-                    break;
-                }else{
-                    urutnama(daftarBuah, 0, totalbuah-1);
-                    lihat_buah();
-                    system("pause");
-                    break;
-                }
-            case 3:
-                judulpnjng("STOK TERDIKIT-TERBANYAK 📈");
-                if(totalbuah == 0){
-                    setcolor(12);
-                    cout << "!!! daftar buah kosong !!!" << endl;
-                    setcolor(7);
-                    system("pause");
-                    break;
-                }else{
-                    urutstok(daftarBuah, totalbuah);
-                    lihat_buah();
-                    system("pause");
-                    break;
-                }
-            case 4:
-                judulpnjng("CARI BERDASARKAN NAMA 🔍");
-                cout << "masukkan nama buah yang ingin dicari : ";
-                getline(cin, namabuah);
-                if(namabuah.empty()){
-                    throw invalid_argument("!!! input tidak boleh kosong !!!");
-                }
-                if(!validNamaBuah(namabuah)){
-                    throw invalid_argument("!!! nama buah tidak boleh mengandung karakter spesial seperti !@#$%^&*() dll. !!!");
-                }
-                carinama(daftarBuah, totalbuah, namabuah);
-                system("pause");
-                break;
-            case 5:{
-                judulpnjng("CARI BERDASARKAN HARGA 🔍");
-                cout << "masukkan harga yang ingin dicari : ";
-                string input;
-                getline(cin, input);
-                if(input.empty()){
-                    throw invalid_argument("!!! input tidak boleh kosong !!!");
-                }
-                for(char c : input){
-                    if(!isdigit(c)){
-                        throw invalid_argument("!!! input tidak valid !!!");
+            system("cls");
+            switch(pilihan){
+                case 1:
+                    judulpnjng("HARGA TERMURAH-TERMAHAL 📈");
+                    if(totalbuah == 0){
+                        setcolor(12);
+                        cout << "!!! daftar buah kosong !!!" << endl;
+                        setcolor(7);
+                        system("pause");
+                        break;
+                    }else{
+                        urutharga(daftarBuah, totalbuah);
+                        lihatbuah();
+                        system("pause");
+                        break;
                     }
+                case 2:
+                    judulpnjng("NAMA URUT (Z-A) 🔤");
+                    if(totalbuah == 0){
+                        setcolor(12);
+                        cout << "!!! daftar buah kosong !!!" << endl;
+                        setcolor(7);
+                        system("pause");
+                        break;
+                    }else{
+                        urutnama(daftarBuah, 0, totalbuah-1);
+                        lihatbuah();
+                        system("pause");
+                        break;
+                    }
+                case 3:
+                    judulpnjng("STOK TERDIKIT-TERBANYAK 📈");
+                    if(totalbuah == 0){
+                        setcolor(12);
+                        cout << "!!! daftar buah kosong !!!" << endl;
+                        setcolor(7);
+                        system("pause");
+                        break;
+                    }else{
+                        urutstok(daftarBuah, totalbuah);
+                        lihatbuah();
+                        system("pause");
+                        break;
+                    }
+                case 4:
+                    judulpnjng("CARI BERDASARKAN NAMA 🔍");
+                    cout << "masukkan nama buah yang ingin dicari : ";
+                    getline(cin, namabuah);
+                    if(namabuah.empty()){
+                        throw invalid_argument("!!! input tidak boleh kosong !!!");
+                    }
+                    if(!validNamaBuah(namabuah)){
+                        throw invalid_argument("!!! nama buah tidak boleh mengandung karakter spesial seperti !@#$%^&*() dll. !!!");
+                    }
+                    carinama(daftarBuah, totalbuah, namabuah);
+                    system("pause");
+                    break;
+                case 5:{
+                    judulpnjng("CARI BERDASARKAN HARGA 🔍");
+                    cout << "masukkan harga yang ingin dicari : ";
+                    string input;
+                    getline(cin, input);
+                    if(input.empty()){
+                        throw invalid_argument("!!! input tidak boleh kosong !!!");
+                    }
+                    for(char c : input){
+                        if(!isdigit(c)){
+                            throw invalid_argument("!!! input tidak valid !!!");
+                        }
+                    }
+                    long int targetharga = stol(input);
+                    cariharga(targetharga);
+                    system("pause");
+                    break;
                 }
-                long int targetharga = stol(input);
-                cariharga(targetharga);
-                system("pause");
-                break;
+                case 6:
+                    keluar = true;
+                    break;
+                default:
+                    takvalid();
+                    break;
             }
-            case 6:
-                keluar = true;
-                break;
-            default:
-                takvalid();
-                break;
-        }
-        } catch(out_of_range &e) {
-            setcolor(12);
-            cout << "\n[ERROR] angka di luar batas." << endl;
-            setcolor(7);
-            system("pause");
         } catch(exception &e) {
             setcolor(12);
             cout << "\n[ERROR] " << e.what() << endl;
@@ -1147,11 +1156,6 @@ void menuadmin(){
                     takvalid();
                     continue;
             }
-        } catch (const out_of_range& e) {
-            setcolor(12);
-            cout << "\n[ERROR] input terlalu panjang." << endl;
-            setcolor(7);
-            system("pause");
         } catch (const exception& e) {
             setcolor(12);
             cout << "\n[ERROR] " << e.what() << endl;
@@ -1217,11 +1221,6 @@ void menuuser(){
                     takvalid();
                     continue;
             }
-        }catch(out_of_range &e){
-            setcolor(12);
-            cout << "\n[ERROR] angka di luar batas." << endl;
-            setcolor(7);
-            system("pause");
         }catch(exception &e){
             setcolor(12);
             cout << "\n[ERROR] " << e.what() << endl;
@@ -1337,11 +1336,6 @@ int main(){
                     takvalid();
                     continue;
                 }
-            } catch(out_of_range &e) {
-                setcolor(12);
-                cout << "\n[ERROR] angka di luar batas." << endl;
-                setcolor(7);
-                system("pause");
             }catch(exception &e){
                 setcolor(12);
                 cout << "\n[ERROR] " << e.what() << endl;
