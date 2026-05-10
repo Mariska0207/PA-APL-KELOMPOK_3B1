@@ -159,11 +159,12 @@ void registrasi(){
 
 bool balik_menu = false;
 bool admin_login(string &username, string &password, bool &balik_menu){
-    judulpnjng("LOGIN ADMIN 💻");
-    setcolor(14);
-    cout << "TEKAN 0 UNTUK KEMBALI KE MENU UTAMA\n" << endl;
-    setcolor(7);
     while(percobaanadmin < 3){
+        system("cls");
+        judulpnjng("LOGIN ADMIN 💻");
+        setcolor(14);
+        cout << "TEKAN 0 UNTUK KEMBALI KE MENU UTAMA\n" << endl;
+        setcolor(7);
         cout << "MASUKKAN USERNAME : ";
         getline(cin, username);
         if(username == "0"){
@@ -194,6 +195,7 @@ bool admin_login(string &username, string &password, bool &balik_menu){
             setcolor(14);
             cout << "\n⚠️  sisa percobaan " << 3 - percobaanadmin << " kali, coba lagi !!!\n" << endl;
             setcolor(7);
+            system("pause");
             continue;
         }
     }
@@ -202,11 +204,12 @@ bool admin_login(string &username, string &password, bool &balik_menu){
 
 bool balikmenu = false;
 bool login_pengguna(string &username, string &password, bool &balikmenu){
-    judulpnjng("LOGIN USER 👥");
-    setcolor(14);
-    cout << "TEKAN 0 UNTUK KEMBALI KE MENU UTAMA\n" << endl;
-    setcolor(7);
     while(percobaanuser < 3){
+        system("cls");
+        judulpnjng("LOGIN USER 👥");
+        setcolor(14);
+        cout << "TEKAN 0 UNTUK KEMBALI KE MENU UTAMA\n" << endl;
+        setcolor(7);
         cout << "MASUKKAN USERNAME : ";
         getline(cin, username);
         if(username == "0"){
@@ -238,8 +241,8 @@ bool login_pengguna(string &username, string &password, bool &balikmenu){
                 setcolor(14);
                 cout << "\n⚠️  sisa percobaan " << 3 - percobaanuser << " kali, coba lagi !!!\n" << endl;
                 setcolor(7);
-                continue;
                 system("pause");
+                continue;
             }
         }
     }
@@ -1270,7 +1273,7 @@ int main(){
                         break;
                     }else if(percobaanadmin == 3){
                         setcolor(13);
-                        cout << "percobaan login anda habis, program keluar 💀" << endl;
+                        cout << "\npercobaan login anda habis, program keluar 💀" << endl;
                         setcolor(7);
                         return 0;
                     }else{
