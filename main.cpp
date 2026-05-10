@@ -157,47 +157,90 @@ void registrasi(){
     }
 }
 
-bool admin_login(string &username, string &password){
+bool balik_menu = false;
+bool admin_login(string &username, string &password, bool &balik_menu){
     judulpnjng("LOGIN ADMIN 💻");
-    cout << "MASUKKAN USERNAME : ";
-    getline(cin, username);
-    if(username.empty()){
-        throw invalid_argument("!!! username tidak boleh kosong !!!");
-    }
-    if(!validUsername(username)){
-        throw invalid_argument("!!! username tidak boleh mengandung karakter spesial seperti !@#$%^&*() dll. !!!");
-    }
-    cout << "MASUKKAN PASSWORD : ";
-    getline(cin, password);
-    if(password.empty()){
-        throw invalid_argument("!!! password tidak boleh kosong !!!");
-    }
-    if(username == "admin" && password == "123"){
-        progressBar();
-        return true;
+    setcolor(14);
+    cout << "TEKAN 0 UNTUK KEMBALI KE MENU UTAMA\n" << endl;
+    setcolor(7);
+    while(percobaanadmin < 3){
+        cout << "MASUKKAN USERNAME : ";
+        getline(cin, username);
+        if(username == "0"){
+            balik_menu = true;
+            return false;
+        }
+        if(username.empty()){
+            throw invalid_argument("!!! username tidak boleh kosong !!!");
+        }
+        if(!validUsername(username)){
+            throw invalid_argument("!!! username tidak boleh mengandung karakter spesial seperti !@#$%^&*() dll. !!!");
+        }
+        cout << "MASUKKAN PASSWORD : ";
+        getline(cin, password);
+        if(password == "0"){
+            balik_menu = true;
+            return false;
+        }
+        if(password.empty()){
+            throw invalid_argument("!!! password tidak boleh kosong !!!");
+        }
+        if(username == "admin" && password == "123"){
+            progressBar();
+            return true;
+        }
+        percobaanadmin++;
+        if(percobaanadmin < 3){
+            setcolor(14);
+            cout << "\n⚠️  sisa percobaan " << 3 - percobaanadmin << " kali, coba lagi !!!\n" << endl;
+            setcolor(7);
+            continue;
+        }
     }
     return false;
 }
 
-bool login_pengguna(string &username, string &password){
+bool balikmenu = false;
+bool login_pengguna(string &username, string &password, bool &balikmenu){
     judulpnjng("LOGIN USER 👥");
-    cout << "MASUKKAN USERNAME : ";
-    getline(cin, username);
-    if(username.empty()){
-        throw invalid_argument("!!! username tidak boleh kosong !!!");
-    }
-    if(!validUsername(username)){
-        throw invalid_argument("!!! username tidak boleh mengandung karakter spesial seperti !@#$%^&*() dll. !!!");
-    }
-    cout << "MASUKKAN PASSWORD : ";
-    getline(cin, password);
-    if(password.empty()){
-        throw invalid_argument("!!! password tidak boleh kosong !!!");
-    }
-    for(int i = 0; i < jumlahpengguna; i++){
-        if(username == pengguna[i].username && password == pengguna[i].password){
-            progressBar();
-            return true;
+    setcolor(14);
+    cout << "TEKAN 0 UNTUK KEMBALI KE MENU UTAMA\n" << endl;
+    setcolor(7);
+    while(percobaanuser < 3){
+        cout << "MASUKKAN USERNAME : ";
+        getline(cin, username);
+        if(username == "0"){
+            balikmenu = true;
+            return false;
+        }
+        if(username.empty()){
+            throw invalid_argument("!!! username tidak boleh kosong !!!");
+        }
+        if(!validUsername(username)){
+            throw invalid_argument("!!! username tidak boleh mengandung karakter spesial seperti !@#$%^&*() dll. !!!");
+        }
+        cout << "MASUKKAN PASSWORD : ";
+        getline(cin, password);
+        if(password == "0"){
+            balikmenu = true;
+            return false;
+        }
+        if(password.empty()){
+            throw invalid_argument("!!! password tidak boleh kosong !!!");
+        }
+        for(int i = 0; i < jumlahpengguna; i++){
+            if(username == pengguna[i].username && password == pengguna[i].password){
+                progressBar();
+                return true;
+            }
+            percobaanuser++;
+            if(percobaanuser < 3){
+                setcolor(14);
+                cout << "\n⚠️  sisa percobaan " << 3 - percobaanuser << " kali, coba lagi !!!\n" << endl;
+                setcolor(7);
+                continue;
+                system("pause");
+            }
         }
     }
     return false;
@@ -317,13 +360,10 @@ void tambahBuah(){
             if(temp.empty()) throw invalid_argument("!!! stok tidak boleh kosong !!!");
             for(char c : temp) if(!isdigit(c)) throw invalid_argument("!!! stok tidak valid !!!");
             daftarBuah[totalbuah].stok = stol(temp);
-
             if(daftarBuah[totalbuah].stok == 0){
                 daftarBuah[totalbuah].status = "habis";
-            } else if (daftarBuah[totalbuah].stok > 0) {
+            }else{
                 daftarBuah[totalbuah].status = "tersedia";
-            } else {
-                throw invalid_argument("!!! stok tidak boleh negatif !!!");
             }
 
             totalbuah++;
@@ -381,14 +421,11 @@ void updateBuah(){
                 if(temp.empty()) throw invalid_argument("!!! stok tidak boleh kosong !!!");
                 for(char c : temp) if(!isdigit(c)) throw invalid_argument("!!! stok tidak valid !!!");
                 long int stoknew = stol(temp);
-                if(stoknew < 0) throw invalid_argument("!!! stok tidak boleh negatif !!!");
                 daftarBuah[no_update - 1].stok = stoknew;
                 if (daftarBuah[no_update - 1].stok == 0) {
                     daftarBuah[no_update - 1].status = "habis";
-                } else if (daftarBuah[no_update - 1].stok > 0) {
+                }else{
                     daftarBuah[no_update - 1].status = "tersedia";
-                } else {
-                    throw invalid_argument("!!! stok tidak boleh negatif !!!");
                 }
                 
                 progressBar();
@@ -1219,7 +1256,7 @@ int main(){
             system("cls");
             switch(pilihan){
                 case 1:
-                    if(admin_login(username, password)){
+                    if(admin_login(username, password, balik_menu)){
                         setcolor(10);
                         cout << "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^" << endl;
                         cout << "             >>>>>> LOGIN BERHASIL ✅ <<<<<<" << endl;
@@ -1231,23 +1268,17 @@ int main(){
                         percobaanadmin = 0;
                         menuadmin();
                         break;
+                    }else if(percobaanadmin == 3){
+                        setcolor(13);
+                        cout << "percobaan login anda habis, program keluar 💀" << endl;
+                        setcolor(7);
+                        return 0;
                     }else{
-                        percobaanadmin++;
-                        if(percobaanadmin == 3){
-                            setcolor(13);
-                            cout << "percobaan login anda habis, program keluar 💀" << endl;
-                            setcolor(7);
-                            return 0;
-                        }else{
-                            setcolor(14);
-                            cout << "\n⚠️  sisa percobaan " << 3 - percobaanadmin << " kali, coba lagi !!!" << endl;
-                            setcolor(7);
-                            system("pause");
-                        }
+                        balik_menu = true;
                         continue;
                     }
                 case 2:
-                    if(login_pengguna(username, password)){
+                    if(login_pengguna(username, password, balikmenu)){
                         setcolor(10);
                         cout << "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^" << endl;
                         cout << "             >>>>>> LOGIN BERHASIL ✅ <<<<<<" << endl;
@@ -1259,19 +1290,13 @@ int main(){
                         percobaanuser = 0;
                         menuuser();
                         break;
+                    }else if(percobaanuser == 3){
+                        setcolor(13);
+                        cout << "\npercobaan login anda habis, program keluar 💀" << endl;
+                        setcolor(7);
+                        return 0;
                     }else{
-                        percobaanuser++;
-                        if(percobaanuser == 3){
-                            setcolor(13);
-                            cout << "percobaan login anda habis, program keluar 💀" << endl;
-                            setcolor(7);
-                            return 0;
-                        }else{
-                            setcolor(14);
-                            cout << "\n⚠️  sisa percobaan " << 3 - percobaanuser << " kali, coba lagi !!!" << endl;
-                            setcolor(7);
-                            system("pause");
-                        }
+                        balik_menu = true;
                         continue;
                     }
                 case 3:
