@@ -42,6 +42,7 @@ transaksi daftartran[MAX];
 string username, password, namabuah;
 int pilihan, totalbuah = 0, percobaanuser = 0, percobaanadmin = 0, jumlahpengguna = 1, totalTransaksi = 0, panjangmin = 3, panjangmax = 30;
 int jumlahTopUp = 0; topup daftarTopUp[MAX];
+bool balik_menu = false;
 
 nama_pengguna pengguna[MAX] = {
     {"kicaw", "123", 100000}
@@ -85,7 +86,7 @@ bool validNamaBuah(const string& str){
         if(!isalpha((unsigned char)c) && c != ' '){
             return false;
         }
-        if(!isalnum((unsigned char)c) && c != '_' && c != '.'){
+        if(!isalnum((unsigned char)c) && c != ' '){
             return false;
         }
     }
@@ -134,13 +135,21 @@ bool cek_username(string username, int index){
 }
 
 void registrasi(){
-    judulpnjng("REGISTRASI 📝");
-    try{
-        if (jumlahpengguna < MAX){
+    while(jumlahpengguna < MAX){
+        system("cls");
+        judulpnjng("REGISTRASI 📝");
+        setcolor(14);
+        cout << "TEKAN 0 UNTUK KEMBALI KE MENU UTAMA\n" << endl;
+        setcolor(7);
+        try{
             cout << "masukkan username : "; 
             getline(cin, username);
             if(username == "admin" || username == "Admin" || username == "ADMIN"){
                 throw invalid_argument("!!! username tidak boleh digunakan !!!");
+            }
+            if(username == "0"){
+                balik_menu = true;
+                return;
             }
             if(username.empty()){
                 throw invalid_argument("!!! username tidak boleh kosong !!!");
@@ -176,20 +185,19 @@ void registrasi(){
             pengguna[jumlahpengguna].saldo = 0;
             jumlahpengguna++;
             system("pause");
-        }else{
+        }catch(exception &e){
             setcolor(12);
-            cout << "!!! daftar pengguna penuh !!!" << endl;
+            cout << "\n[ERROR] " << e.what() << endl;
             setcolor(7);
+            system("pause");
         }
-    }catch(exception &e){
-        setcolor(12);
-        cout << "\n[ERROR] " << e.what() << endl;
-        setcolor(7);
-        system("pause");
     }
+    setcolor(12);
+    cout << "!!! daftar pengguna penuh !!!" << endl;
+    setcolor(7);
+    system("pause");
 }
 
-bool balik_menu = false;
 bool admin_login(string &username, string &password, bool &balik_menu){
     while(percobaanadmin < 3){
         system("cls");
@@ -237,7 +245,6 @@ bool admin_login(string &username, string &password, bool &balik_menu){
     return false;
 }
 
-bool balikmenu = false;
 bool login_pengguna(string &username, string &password, bool &balikmenu){
     while(percobaanuser < 3){
         system("cls");
@@ -1313,7 +1320,7 @@ int main(){
                         continue;
                     }
                 case 2:
-                    if(login_pengguna(username, password, balikmenu)){
+                    if(login_pengguna(username, password, balik_menu)){
                         setcolor(10);
                         cout << "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^" << endl;
                         cout << "             >>>>>> LOGIN BERHASIL ✅ <<<<<<" << endl;
@@ -1336,6 +1343,7 @@ int main(){
                     }
                 case 3:
                     registrasi();
+                    balik_menu = true;
                     continue;
                 case 4:             
                     setcolor(14);         
