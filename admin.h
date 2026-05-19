@@ -24,6 +24,9 @@ void tambahBuah(){
             if(daftarBuah[totalbuah].nama[0] == ' '){
                 throw invalid_argument("!!! nama buah tidak boleh dimulai dengan spasi !!!");
             }
+            if(daftarBuah[totalbuah].nama.back() == ' '){
+                throw invalid_argument("!!! nama buah tidak boleh diakhiri dengan spasi !!!");
+            }
             if(daftarBuah[totalbuah].nama.length() < panjangmin || daftarBuah[totalbuah].nama.length() > panjangmax){
                 throw invalid_argument("!!! panjang nama buah minimal 3 karakter dan maksimal 30 karakter !!!");
             }
