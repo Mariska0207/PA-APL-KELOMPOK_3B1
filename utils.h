@@ -43,9 +43,6 @@ bool validNamaBuah(const string& str){
         if(!isalpha((unsigned char)c) && c != ' '){
             return false;
         }
-        if(!isalnum((unsigned char)c) && c != ' '){
-            return false;
-        }
     }
     return true;
 }
