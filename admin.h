@@ -18,21 +18,11 @@ void tambahBuah(){
         try{
             cout << "masukkan nama buah : ";
             getline(cin, daftarBuah[totalbuah].nama);
-            if(daftarBuah[totalbuah].nama.empty()){
-                throw invalid_argument("!!! nama buah tidak boleh kosong !!!");
-            }
-            if(daftarBuah[totalbuah].nama[0] == ' '){
-                throw invalid_argument("!!! nama buah tidak boleh dimulai dengan spasi !!!");
-            }
-            if(daftarBuah[totalbuah].nama.back() == ' '){
-                throw invalid_argument("!!! nama buah tidak boleh diakhiri dengan spasi !!!");
-            }
-            if(daftarBuah[totalbuah].nama.length() < panjangmin || daftarBuah[totalbuah].nama.length() > panjangmax){
-                throw invalid_argument("!!! panjang nama buah minimal 3 karakter dan maksimal 30 karakter !!!");
-            }
-            if(!validNamaBuah(daftarBuah[totalbuah].nama)){
-                throw invalid_argument("!!! nama buah tidak boleh mengandung karakter spesial seperti !@#$%^&*() dll. !!!");
-            }
+            if(daftarBuah[totalbuah].nama.empty()) throw invalid_argument("!!! nama buah tidak boleh kosong !!!");
+            if(daftarBuah[totalbuah].nama[0] == ' ') throw invalid_argument("!!! nama buah tidak boleh dimulai dengan spasi !!!");
+            if(daftarBuah[totalbuah].nama.back() == ' ') throw invalid_argument("!!! nama buah tidak boleh diakhiri dengan spasi !!!");
+            if(daftarBuah[totalbuah].nama.length() < panjangmin || daftarBuah[totalbuah].nama.length() > panjangmax) throw invalid_argument("!!! panjang nama buah minimal 3 karakter dan maksimal 30 karakter !!!");
+            if(!validNamaBuah(daftarBuah[totalbuah].nama)) throw invalid_argument("!!! nama buah tidak boleh mengandung karakter spesial seperti !@#$%^&*() dll. !!!");
             for(char c : daftarBuah[totalbuah].nama){
                 if(isdigit((unsigned char)c)){
                     throw invalid_argument("!!! nama buah tidak boleh mengandung angka !!!");
@@ -50,6 +40,7 @@ void tambahBuah(){
             getline(cin, temp);
             setcolor(7);
             if(temp.empty()) throw invalid_argument("!!! harga tidak boleh kosong !!!");
+            if(temp[0] == '0') throw invalid_argument("!!! harga tidak boleh di awali angka 0 !!!");
             for(char c : temp) if(!isdigit(c)) throw invalid_argument("!!! harga tidak valid !!!");
             daftarBuah[totalbuah].harga = stol(temp);
             if(daftarBuah[totalbuah].harga < 1000 || daftarBuah[totalbuah].harga > 1000000) throw invalid_argument("!!! harga Rp1.000 - Rp1.000.000 !!!");
@@ -57,6 +48,7 @@ void tambahBuah(){
             cout << "masukkan stok buah : ";
             getline(cin, temp);
             if(temp.empty()) throw invalid_argument("!!! stok tidak boleh kosong !!!");
+            if(temp[0] == '0') throw invalid_argument("!!! stok tidak boleh di awali angka 0 !!!");
             for(char c : temp) if(!isdigit(c)) throw invalid_argument("!!! stok tidak valid !!!");
             daftarBuah[totalbuah].stok = stol(temp);
             if(daftarBuah[totalbuah].stok > 1000) throw invalid_argument("!!! stok maksimal 1000 pcs !!!");
@@ -69,11 +61,11 @@ void tambahBuah(){
             cout << "        >>>>>> BUAH BERHASIL DITAMBAHKAN ✅ <<<<<<" << endl;
             cout << "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^" << endl;
             setcolor(7);
-        }catch(out_of_range &e){
+        }catch(const out_of_range &e){
             setcolor(12);
             cout << "\n[ERROR] input terlalu panjang." << endl;
             setcolor(7);
-        }catch(exception &e){
+        }catch(const exception &e){
             setcolor(12);
             cout << "\n[ERROR] " << e.what() << endl;
             setcolor(7);
@@ -94,6 +86,7 @@ void updateBuah(){
             cout << "masukkan NOMOR buah yang ingin di update (1-" << totalbuah << "): ";
             getline(cin, No);
             if(No.empty()) throw invalid_argument("!!! nomor tidak boleh kosong !!!");
+            if(No[0] == '0') throw invalid_argument("!!! nomor tidak boleh di awali angka 0 !!!");
             for(char c : No) if(!isdigit(c)) throw invalid_argument("!!! nomor tidak valid !!!");
             int no_update = stoi(No);
 
@@ -105,16 +98,20 @@ void updateBuah(){
                 getline(cin, temp);
                 setcolor(7);
                 if(temp.empty()) throw invalid_argument("!!! harga tidak boleh kosong !!!");
+                if(temp[0] == '0') throw invalid_argument("!!! harga tidak boleh di awali angka 0 !!!");
                 for(char c : temp) if(!isdigit(c)) throw invalid_argument("!!! harga tidak valid !!!");
-                daftarBuah[no_update - 1].harga = stol(temp);
-                if(daftarBuah[no_update - 1].harga < 1000 || daftarBuah[no_update - 1].harga > 1000000) throw invalid_argument("!!! harga Rp1.000 - Rp1.000.000 !!!");
+                long int hargabaru = stol(temp);
+                if(hargabaru < 1000 || hargabaru > 1000000) throw invalid_argument("!!! harga Rp1.000 - Rp1.000.000 !!!");
+                daftarBuah[no_update - 1].harga = hargabaru;
 
                 cout << "masukkan stok baru buah: ";
                 getline(cin, temp);
                 if(temp.empty()) throw invalid_argument("!!! stok tidak boleh kosong !!!");
+                if(temp[0] == '0') throw invalid_argument("!!! stok tidak boleh di awali angka 0 !!!");
                 for(char c : temp) if(!isdigit(c)) throw invalid_argument("!!! stok tidak valid !!!");
-                daftarBuah[no_update - 1].stok = stol(temp);
-                if(daftarBuah[no_update - 1].stok > 1000) throw invalid_argument("!!! stok maksimal 1000 pcs !!!");
+                long int stokbaru = stol(temp);
+                if(stokbaru > 1000) throw invalid_argument("!!! stok maksimal 1000 pcs !!!");
+                daftarBuah[no_update - 1].stok = stokbaru;
                 updateStatus(&daftarBuah[no_update - 1]);
                 
                 progressBar();
@@ -128,11 +125,11 @@ void updateBuah(){
                 cout << "!!! BUAH TIDAK DITEMUKAN !!!" << endl;
                 setcolor(7);
             }
-        }catch(out_of_range &e){
+        }catch(const out_of_range &e){
             setcolor(12);
             cout << "\n[ERROR] input terlalu panjang." << endl;
             setcolor(7);
-        }catch(exception &e){
+        }catch(const exception &e){
             setcolor(12);
             cout << "\n[ERROR] " << e.what() << endl;
             setcolor(7);
@@ -153,6 +150,7 @@ void hapusBuah(){
             cout << "masukkan NOMOR buah yang ingin di hapus (1-" << totalbuah << "): ";
             getline(cin, No); 
             if(No.empty()) throw invalid_argument("!!! nomor tidak boleh kosong !!!");
+            if(No[0] == '0') throw invalid_argument("!!! nomor tidak boleh di awali angka 0 !!!");
             for(char c : No) if(!isdigit(c)) throw invalid_argument("!!! nomor tidak valid !!!");
             int no_hapus = stoi(No);
             if(no_hapus >= 1 && no_hapus <= totalbuah){
@@ -171,11 +169,11 @@ void hapusBuah(){
                 cout << "!!! BUAH TIDAK DITEMUKAN !!!" << endl;
                 setcolor(7);
             }
-        }catch(out_of_range &e){
+        }catch(const out_of_range &e){
             setcolor(12);
             cout << "\n[ERROR] input terlalu panjang." << endl;
             setcolor(7);
-        }catch(exception &e){
+        }catch(const exception &e){
             setcolor(12);
             cout << "\n[ERROR] " << e.what() << endl;
             setcolor(7);
@@ -256,9 +254,11 @@ void konfirmasiTopUp(){
             cout << "+-----+-------------------+--------------+--------------+------------------+" << endl;
         }
         
-        string sNomor; cout << "\nmasukkan nomor top-up yang ingin diproses (0 untuk kembali): "; 
+        string sNomor; 
+        cout << "\nmasukkan nomor top-up yang ingin diproses (0 untuk kembali): "; 
         getline(cin, sNomor); 
         if (sNomor.empty()) throw invalid_argument("!!! input tidak boleh kosong !!!");
+        if(sNomor[0] == '0') throw invalid_argument("!!! input tidak boleh di awali angka 0 !!!");
         for (char c : sNomor) if (!isdigit(c)) throw invalid_argument("!!! input tidak valid !!!");
         
         int nomor = stoi(sNomor);
@@ -297,11 +297,11 @@ void konfirmasiTopUp(){
         } else {
             throw invalid_argument("!!! input tidak valid, harap masukkan 'y' atau 'n' !!!");
         }
-    } catch (const out_of_range& e) {
+    } catch(const out_of_range &e) {
         setcolor(12);
         cout << "\n[ERROR] input terlalu panjang." << endl;
         setcolor(7);
-    } catch (const exception& e) {
+    } catch(const exception& e) {
         setcolor(12);
         cout << "\n[ERROR] " << e.what() << endl;
         setcolor(7);
@@ -321,6 +321,7 @@ void hapusUser(){
             cout << "masukkan NOMOR pengguna yang ingin di hapus (1-" << jumlahpengguna << "): ";
             getline(cin, sNo);
             if(sNo.empty()) throw invalid_argument("!!! nomor tidak boleh kosong !!!");
+            if(sNo[0] == '0') throw invalid_argument("!!! nomor tidak boleh di awali angka 0 !!!");
             for (char c : sNo) if (!isdigit(c)) throw invalid_argument("!!! input tidak valid !!!");
             
             int no_hapus = stoi(sNo);
@@ -340,11 +341,11 @@ void hapusUser(){
                 cout << "!!! USER TIDAK DITEMUKAN !!!" << endl;
                 setcolor(7);
             }
-        }catch(out_of_range &e){
+        }catch(const out_of_range &e){
             setcolor(12);
             cout << "\n[ERROR] input terlalu panjang." << endl;
             setcolor(7);
-        }catch(exception &e){
+        }catch(const exception &e){
             setcolor(12);
             cout << "\n[ERROR] " << e.what() << endl;
             setcolor(7);
@@ -372,9 +373,8 @@ void menuadmin(){
             cout << "MASUKKAN PILIHAN ANDA : "; string pilihan;
             getline(cin, pilihan);
             setcolor(7);
-            if (pilihan.empty()) {
-                throw invalid_argument("!!! input tidak boleh kosong !!!");
-            }
+            if (pilihan.empty()) throw invalid_argument("!!! input tidak boleh kosong !!!");
+            if(pilihan[0] == '0') throw invalid_argument("!!! input tidak boleh di awali angka 0 !!!");
             for (char c : pilihan) {
                 if (c < '0' || c > '9') {
                     throw invalid_argument("!!! input tidak valid !!!");
@@ -418,12 +418,12 @@ void menuadmin(){
                     takvalid();
                     continue;
             }
-        } catch(out_of_range &e) {
+        } catch(const out_of_range &e) {
             setcolor(12);
             cout << "\n[ERROR] input terlalu panjang." << endl;
             setcolor(7);
             system("pause");
-        } catch (const exception& e) {
+        } catch(const exception& e) {
             setcolor(12);
             cout << "\n[ERROR] " << e.what() << endl;
             setcolor(7);

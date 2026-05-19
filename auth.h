@@ -66,7 +66,8 @@ void registrasi(){
             pengguna[jumlahpengguna].saldo = 0;
             jumlahpengguna++;
             system("pause");
-        }catch(exception &e){
+            return;
+        }catch(const exception &e){
             setcolor(12);
             cout << "\n[ERROR] " << e.what() << endl;
             setcolor(7);
@@ -123,7 +124,7 @@ bool admin_login(string &username, string &password, bool &balik_menu){
                 system("pause");
                 continue;
             }
-        }catch(exception &e){
+        }catch(const exception &e){
             setcolor(12);
             cout << "\n[ERROR] " << e.what() << endl;
             setcolor(7);
@@ -179,7 +180,7 @@ bool login_pengguna(string &username, string &password, bool &balikmenu){
                 system("pause");
                 continue;
             }
-        }catch(exception &e){
+        }catch(const exception &e){
             setcolor(12);
             cout << "\n[ERROR] " << e.what() << endl;
             setcolor(7);

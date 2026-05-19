@@ -28,6 +28,7 @@ int main(){
                 getline(cin, input);
                 setcolor(7);
             if(input.empty()) throw invalid_argument("!!! input tidak boleh kosong !!!");
+            if(input[0] == '0') throw invalid_argument("!!! input tidak boleh di awali angka 0 !!!");
             for(char c : input) {
                 if(!isdigit(c)) throw invalid_argument("!!! input tidak valid !!!");
             }
@@ -114,12 +115,12 @@ int main(){
                     takvalid();
                     continue;
                 }
-            } catch(out_of_range &e) {
+            } catch(const out_of_range &e) {
                 setcolor(12);
                 cout << "\n[ERROR] input terlalu panjang." << endl;
                 setcolor(7);
                 system("pause");
-            }catch(exception &e){
+            }catch(const exception &e){
                 setcolor(12);
                 cout << "\n[ERROR] " << e.what() << endl;
                 setcolor(7);
